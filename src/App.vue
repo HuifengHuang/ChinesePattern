@@ -1,9 +1,11 @@
 <script setup>
 import Main from './components/Main.vue'
+import PieChart from './components/piechart.vue'
 </script>
 
 <template>
   <Main />
+   <!-- <PieChart /> -->
 </template>
 
 <style scoped>

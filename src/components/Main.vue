@@ -1,4 +1,5 @@
 <script>
+import PieChart from './piechart.vue'
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -10,6 +11,10 @@ import icon_arrow_up from '../assets/images/arrow_up.png';
 const activeNames = ref(['1']);
 
 export default {
+  name: 'Main',
+  components:{
+    PieChart
+  },
   data() {
       return {
         icon_mark: icon_mark,
@@ -18,6 +23,8 @@ export default {
         icon_trans: icon_trans,
         icon_arrow_up: icon_arrow_up,
         input_value: '',
+
+        piechartSize: 12 * window.innerHeight / 100,
 
         medium_list:[
           "Utensil & Vessel",
@@ -53,9 +60,11 @@ export default {
 
     <!-- 主体栏 -->
     <div class="Main">
-      <div class="controller">
-        <div class="Medium_block">
-          <div class="selector">
+      <div class="controller"> <!-- 左侧控制栏 -->
+        
+        <div class="Medium_block"> <!-- Medium模块 -->
+
+          <div class="selector"> 
             <div class="title_m">
               <span  style="font-size: 2vh;">Medium</span>
               <el-image :src="icon_arrow_up" style="width: 1.1vw;height: 1.1vh;" fit="fill"/>
@@ -64,10 +73,16 @@ export default {
               <el-checkbox v-for="item in medium_list" v-model="checked1" :label="item" size="large" />
             </div>
           </div>
-          <div class="graph"></div>
+          <div class="graph">
+            <PieChart :size="piechartSize" />
+          </div>
+          <div class="legend">
+
+          </div>
         </div>
 
       </div>
+
       <div class="viewer"></div>
     </div>
 
@@ -129,7 +144,7 @@ div {
 }
 .Main .controller {
   height: 100%;
-  width: 15vw;
+  width: 18vw;
   overflow: auto;
 }
 .Main .controller .Medium_block{
@@ -167,8 +182,15 @@ div {
 .Main .controller .Medium_block .graph{
   margin-top: 0.5vh;
   width: 100%;
-  height: 20vh;
-  background-color: rgb(90, 163, 163);
+  height: 12vh;
+  box-sizing: border-box;
+  border: 1px solid #000;
+}
+.Main .controller .Medium_block .legend{
+  margin-top: 0.5vh;
+  width: 100%;
+  height: 10vh;
+  background-color: rgb(11, 26, 26);
 }
 .Main .viewer {
   height: 100%;
