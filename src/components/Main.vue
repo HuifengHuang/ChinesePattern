@@ -1,5 +1,6 @@
 <script>
-import PieChart from './piechart.vue'
+import PieChart from './piechart.vue';
+import WordCloud from './WordCloud.vue';
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -13,7 +14,8 @@ const activeNames = ref(['1']);
 export default {
   name: 'Main',
   components:{
-    PieChart
+    PieChart,
+    WordCloud
   },
   data() {
       return {
@@ -25,6 +27,7 @@ export default {
         input_value: '',
 
         piechartSize: 12 * window.innerHeight / 100,
+        wordcloutSize: [18 * window.innerHeight / 100 ,10 * window.innerHeight / 100],
 
         medium_list:[
           "Utensil & Vessel",
@@ -75,6 +78,7 @@ export default {
           </div>
           <div class="graph">
             <PieChart :size="piechartSize" />
+            <WordCloud :size="wordcloutSize" />
           </div>
           <div class="legend">
 
@@ -183,14 +187,16 @@ div {
   margin-top: 0.5vh;
   width: 100%;
   height: 12vh;
-  box-sizing: border-box;
-  border: 1px solid #000;
+  display: flex;
+  justify-content: space-between;
 }
 .Main .controller .Medium_block .legend{
   margin-top: 0.5vh;
   width: 100%;
   height: 10vh;
-  background-color: rgb(11, 26, 26);
+  box-sizing: border-box;
+  border: 1px solid #000;
+  display: flex;
 }
 .Main .viewer {
   height: 100%;

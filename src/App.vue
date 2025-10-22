@@ -1,11 +1,13 @@
 <script setup>
 import Main from './components/Main.vue'
 import PieChart from './components/piechart.vue'
+import WordCloud from './components/WordCloud.vue';
 </script>
 
 <template>
   <Main />
-   <!-- <PieChart /> -->
+  <!-- <PieChart /> -->
+  <!-- <WordCloud /> -->
 </template>
 
 <style scoped>
