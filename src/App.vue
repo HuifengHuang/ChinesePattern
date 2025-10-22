@@ -2,12 +2,14 @@
 import Main from './components/Main.vue'
 import PieChart from './components/PieChart.vue'
 import WordCloud from './components/WordCloud.vue';
+import MutipleSelector from './components/MutipleSelector.vue';
 </script>
 
 <template>
   <Main />
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
+  <!-- <MutipleSelector /> -->
 </template>
 
 <style scoped>

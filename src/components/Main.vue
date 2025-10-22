@@ -2,6 +2,7 @@
 import PieChart from './PieChart.vue';
 import WordCloud from './WordCloud.vue';
 import Legend from './Legend.vue';
+import MutipleSelector from './MutipleSelector.vue';
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -17,7 +18,8 @@ export default {
   components:{
     PieChart,
     WordCloud,
-    Legend
+    Legend,
+    MutipleSelector
   },
   data() {
       return {
@@ -28,9 +30,10 @@ export default {
         icon_arrow_up: icon_arrow_up,
         input_value: '',
 
-        piechartSize: 12 * window.innerHeight / 100,
+        piechartSize: 5.5 * window.innerWidth / 100,
         wordcloudSize: [9.5 * window.innerWidth / 100 ,9.5 * window.innerHeight / 100],
         legendSize: 0,
+        selectorSize: 15 * window.innerWidth / 100,
 
         medium_list:[
           "Utensil & Vessel",
@@ -79,15 +82,8 @@ export default {
         
         <div class="Medium_block"> <!-- Medium模块 -->
 
-          <div class="selector"> 
-            <div class="title_m">
-              <span  style="font-size: 2vh;">Medium</span>
-              <el-image :src="icon_arrow_up" style="width: 1.1vw;height: 1.1vh;" fit="fill"/>
-            </div>
-            <div class="options">
-              <el-checkbox v-for="item in medium_list" v-model="checked1" :label="item" size="large" />
-            </div>
-          </div>
+          <MutipleSelector :size="selectorSize" />
+
           <div class="graph">
             <PieChart :size="piechartSize" />
             <WordCloud :size="wordcloudSize" />
@@ -171,30 +167,7 @@ div {
   display: flex;
   flex-direction: column;
 }
-.Main .controller .Medium_block .selector{
-  width: 100%;
-  min-height: 5vh;
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  box-sizing: border-box;
-  border: 1px solid rgba(185, 185, 185, 1);
-}
-.Main .controller .Medium_block .selector .title_m{
-  /* width: 100%; */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 0.5vw;
-  background-color: #5F9DDA40;
-}
-.Main .controller .Medium_block .selector .options{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #F3F3F3;
-  border-top: 1px solid rgba(185, 185, 185, 1);
-}
+
 .Main .controller .Medium_block .graph{
   margin-top: 0.5vh;
   width: 100%;
@@ -213,7 +186,7 @@ div {
   height: 100%;
   width: 85vw;
   background-color: #F5F5F5;
-  overflow: auto;
+  overflow-y:auto;
 }
 
 
