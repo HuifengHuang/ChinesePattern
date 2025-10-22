@@ -6,7 +6,7 @@
 import * as d3 from 'd3';
 
 export default {
-  name: 'DonutChart',
+  name: 'PieChart',
   props: {
     color: {
       type: Array,
@@ -69,8 +69,6 @@ export default {
       const pie = d3.pie()
         .value(d=>d[1])
       var data_ready = pie(Object.entries(this.dataset))
-
-      console.log(data_ready);
 
       // 绘制圆环
       this.svg

@@ -1,6 +1,7 @@
 <script>
-import PieChart from './piechart.vue';
+import PieChart from './PieChart.vue';
 import WordCloud from './WordCloud.vue';
+import Legend from './Legend.vue';
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -15,7 +16,8 @@ export default {
   name: 'Main',
   components:{
     PieChart,
-    WordCloud
+    WordCloud,
+    Legend
   },
   data() {
       return {
@@ -27,7 +29,8 @@ export default {
         input_value: '',
 
         piechartSize: 12 * window.innerHeight / 100,
-        wordcloutSize: [18 * window.innerHeight / 100 ,10 * window.innerHeight / 100],
+        wordcloudSize: [9.5 * window.innerWidth / 100 ,9.5 * window.innerHeight / 100],
+        legendSize: 0,
 
         medium_list:[
           "Utensil & Vessel",
@@ -36,6 +39,15 @@ export default {
           "Adornment & Ornament",
           "Pictorial work",
           "Architecture"
+        ],
+
+        legend_list: [
+          { color: "#FAC632", text: "Utensil & Vessel (1234)"},
+          { color: "#FE7960", text: "Textile (123)"},
+          { color: "#18B8EB", text: "Sculpture (123)"},
+          { color: "#F38BA6", text: "Adornment & Ornament (123)"},
+          { color: "#C8DA55", text: "Pictorial works (123)"},
+          { color: "#00B88E", text: "Architecture (123)"},
         ]
       };
     },
@@ -78,10 +90,10 @@ export default {
           </div>
           <div class="graph">
             <PieChart :size="piechartSize" />
-            <WordCloud :size="wordcloutSize" />
+            <WordCloud :size="wordcloudSize" />
           </div>
           <div class="legend">
-
+            <Legend v-for="item in legend_list" :text="item['text']" :color="item['color']" />
           </div>
         </div>
 
@@ -152,7 +164,7 @@ div {
   overflow: auto;
 }
 .Main .controller .Medium_block{
-  margin: 2vh 1vw 0 1vw;
+  margin: 2vh 1vw 2vh 1vw;
   width: 100%;
   overflow: auto;
   /* background-color: aqua; */
@@ -193,10 +205,9 @@ div {
 .Main .controller .Medium_block .legend{
   margin-top: 0.5vh;
   width: 100%;
-  height: 10vh;
-  box-sizing: border-box;
-  border: 1px solid #000;
+  /* height: 10vh; */
   display: flex;
+  flex-wrap: wrap;
 }
 .Main .viewer {
   height: 100%;
