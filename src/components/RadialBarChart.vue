@@ -2,17 +2,22 @@
   <div class="container" :style="container_style">
     <div class="quantity" :style="quantity_style">
       <div class="text_container" v-for="(value, index) in quantity" 
-            :style="{'width': real_width[index] + 'px', 'font-size': size[1] * 0.25 + 'px'}">
+            :style="{
+              'width': real_width[index] + 'px', 
+              'font-size': size[1] * 0.25 + 'px',
+              'color': color[index]
+            }">
         <span>{{ value }}</span>
       </div>
 
     </div>
     <div class="bar-chart" :style="chart_style">
       <div class="bar" v-for="(value, index) in quantity" 
-          :style="{'background-color': color[index], 'width':  real_width[index] + 'px'}"></div>
+          :style="{'background-color': color[index], 'width': real_width[index] + 'px'}"></div>
     </div>
-    <div class="legend">
-
+    <div class="legend" :style="legend_style">
+      <Legend v-for="item in legend_list" :color="item['color']" :size="item['size']"
+        :text="item['text']"/>
     </div>
   </div>
 </template>
@@ -34,7 +39,7 @@ export default {
     },
     size:{
       type: Array,
-      default: [1000, 100]
+      default: [500, 50]
     },
     quantity:{
       type: Array,
@@ -48,9 +53,9 @@ export default {
         "Auspiciousness",
         "Narrativity",
         "Identity",
-        "Identity"
+        "Ideology"
       ]
-    }
+    },
   },
   data(){
     return {
@@ -60,7 +65,9 @@ export default {
       },
       chart_style: null,
       quantity_style: null,
-      real_width:[],
+      legend_style: null,
+      real_width: [],
+      legend_list: []
     }
   },
   created(){
@@ -70,6 +77,12 @@ export default {
     }
     this.chart_style = { height: Math.round(1 / 6 * this.size[1]) + 'px' }
     this.quantity_style = { height: Math.round(2 / 6 * this.size[1]) + 'px' }
+    this.legend_style = { height: Math.round(3 / 6 * this.size[1]) + 'px' }
+    for(let i=0;i<this.quantity.length;i++){
+      this.legend_list.push({
+        'color': this.color[i], 'text': this.text[i], 'size': this.size[1] / 5
+      })
+    }
   },
   methods:{
 
@@ -98,5 +111,8 @@ export default {
 }
 .legend{
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

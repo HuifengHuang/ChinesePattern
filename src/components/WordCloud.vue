@@ -1,10 +1,6 @@
 <template>
-  <div id="container">
-    <div class="Titles">
-      <span class="word">Types</span>
-    </div>
-    <div ref="wordCloud" class="word-cloud"></div>
-  </div>
+  <div ref="wordCloud" class="word-cloud"
+    :style="{'width': size[0] + 'px', 'height': size[1] + 'px'}"></div>
 </template>
 
 <script>
@@ -140,23 +136,6 @@ export default {
 </script>
 
 <style scoped>
-#container {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  border: 2px solid #B4B4B4;
-  background-color: #B4B4B4;
-  border-radius: 4px;
-}
-
-.Titles{
-  display: flex;
-  align-items: center;
-  width: 100%;
-  flex-grow: 1;
-  font-size:x-small;
-}
-
 .word{
   margin-left: 0.1vw;
   color: #FFFFFF;

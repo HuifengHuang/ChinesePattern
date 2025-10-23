@@ -7,11 +7,11 @@ import RadialBarChart from './components/RadialBarChart.vue';
 </script>
 
 <template>
-  <!-- <Main /> -->
+  <Main />
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
-  <RadialBarChart />
+  <!-- <RadialBarChart /> -->
 </template>
 
 <style scoped>

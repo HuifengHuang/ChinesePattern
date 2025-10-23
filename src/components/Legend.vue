@@ -41,7 +41,7 @@ export default {
 .lengend-container {
   display: flex;
   align-items: center;
-  margin-left: 5px;
+  margin-right: 5px;
 }
 .span {
   margin-left: 5px;

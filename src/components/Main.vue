@@ -3,6 +3,7 @@ import PieChart from './PieChart.vue';
 import WordCloud from './WordCloud.vue';
 import Legend from './Legend.vue';
 import MutipleSelector from './MutipleSelector.vue';
+import RadialBarChart from './RadialBarChart.vue';
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -18,7 +19,8 @@ export default {
     PieChart,
     WordCloud,
     Legend,
-    MutipleSelector
+    MutipleSelector,
+    RadialBarChart
   },
   data() {
       return {
@@ -33,6 +35,7 @@ export default {
         wordcloudSize: [9.5 * window.innerWidth / 100 ,9.5 * window.innerHeight / 100],
         legendSize: 0,
         selectorSize: 15 * window.innerWidth / 100,
+        radialbarchartSize: [15 * window.innerWidth / 100, 5 * window.innerHeight / 100],
 
         medium_list:[
           "Utensil & Vessel",
@@ -89,7 +92,14 @@ export default {
           <MutipleSelector :size="selectorSize" />
           <div class="graph">
             <PieChart :size="piechartSize" />
-            <WordCloud :size="wordcloudSize" />
+
+            <div class="clouds">
+              <div class="title">
+                <span>Medium</span>
+              </div>
+              <WordCloud :size="wordcloudSize" />
+            </div>
+
           </div>
           <div class="legend">
             <Legend v-for="item in legend_list" :text="item['text']" :color="item['color']" />
@@ -98,6 +108,10 @@ export default {
 
         <div class="Subject_block">   <!-- Subject模块 -->
           <MutipleSelector :size="selectorSize" title="Subject" :item_list="subject_list"/>
+          <div style="margin-top: 1vh;">
+            <RadialBarChart :size="radialbarchartSize" />
+          </div>
+          
         </div>
       </div>
 
@@ -169,20 +183,34 @@ div {
 }
 .Main .controller .Medium_block{
   padding: 2vh 1vw 2vh 1vw;
-  width: auto;
   display: flex;
   flex-direction: column;
 }
 .Main .controller .Medium_block .graph{
   margin-top: 0.5vh;
-  width: 100%;
+  width: 16vw;
   height: 12vh;
   display: flex;
   justify-content: space-between;
 }
+.Main .controller .Medium_block .graph .clouds{
+  margin-top: 0.5vh;
+  width: 10vw;
+  height: 100%; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 2px solid #B4B4B4;
+  background-color: #B4B4B4;
+  border-radius: 4px;
+}
+.Main .controller .Medium_block .graph .clouds .title{
+  width: 100%;
+  flex-grow: 1;
+}
 .Main .controller .Medium_block .legend{
   margin-top: 0.5vh;
-  width: 100%;
+  width: 16vw;
   /* height: 10vh; */
   display: flex;
   flex-wrap: wrap;
@@ -190,7 +218,6 @@ div {
 
 .Main .controller .Subject_block{
   margin: 2vh 1vw 2vh 1vw;
-  width: 100%;
   /* background-color: aqua; */
   display: flex;
   flex-direction: column;
