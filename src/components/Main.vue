@@ -11,7 +11,6 @@ import icon_like from '../assets/images/icon_like.png';
 import icon_trans from '../assets/images/icon_trans.png';
 import icon_arrow_up from '../assets/images/arrow_up.png';
 
-const activeNames = ref(['1']);
 
 export default {
   name: 'Main',
@@ -42,6 +41,12 @@ export default {
           "Adornment & Ornament",
           "Pictorial work",
           "Architecture"
+        ],
+        subject_list:[
+          "Auspiciousness",
+          "Narrativity",
+          "Identity",
+          "Ideology"
         ],
 
         legend_list: [
@@ -81,9 +86,7 @@ export default {
       <div class="controller"> <!-- 左侧控制栏 -->
         
         <div class="Medium_block"> <!-- Medium模块 -->
-
           <MutipleSelector :size="selectorSize" />
-
           <div class="graph">
             <PieChart :size="piechartSize" />
             <WordCloud :size="wordcloudSize" />
@@ -93,6 +96,9 @@ export default {
           </div>
         </div>
 
+        <div class="Subject_block">   <!-- Subject模块 -->
+          <MutipleSelector :size="selectorSize" title="Subject" :item_list="subject_list"/>
+        </div>
       </div>
 
       <div class="viewer"></div>
@@ -157,17 +163,16 @@ div {
 .Main .controller {
   height: 100%;
   width: 18vw;
-  overflow: auto;
-}
-.Main .controller .Medium_block{
-  margin: 2vh 1vw 2vh 1vw;
-  width: 100%;
-  overflow: auto;
-  /* background-color: aqua; */
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
-
+.Main .controller .Medium_block{
+  padding: 2vh 1vw 2vh 1vw;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+}
 .Main .controller .Medium_block .graph{
   margin-top: 0.5vh;
   width: 100%;
@@ -182,6 +187,15 @@ div {
   display: flex;
   flex-wrap: wrap;
 }
+
+.Main .controller .Subject_block{
+  margin: 2vh 1vw 2vh 1vw;
+  width: 100%;
+  /* background-color: aqua; */
+  display: flex;
+  flex-direction: column;
+}
+
 .Main .viewer {
   height: 100%;
   width: 85vw;

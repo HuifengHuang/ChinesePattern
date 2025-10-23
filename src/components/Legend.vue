@@ -13,7 +13,7 @@ export default {
       type: String,
       default: "#FAC632"
     },
-    size:{
+    size:{    // 这里是方块size
       type: Number,
       default: 10
     },

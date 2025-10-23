@@ -3,13 +3,15 @@ import Main from './components/Main.vue'
 import PieChart from './components/PieChart.vue'
 import WordCloud from './components/WordCloud.vue';
 import MutipleSelector from './components/MutipleSelector.vue';
+import RadialBarChart from './components/RadialBarChart.vue';
 </script>
 
 <template>
-  <Main />
+  <!-- <Main /> -->
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
+  <RadialBarChart />
 </template>
 
 <style scoped>
