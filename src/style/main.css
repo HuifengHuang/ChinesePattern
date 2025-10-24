@@ -1,0 +1,151 @@
+div {
+  display: flex;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+}
+
+
+.Header {
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  height: 5vh;
+  box-shadow: 0 4px 3px 0 rgba(80, 104, 87, 0.25);
+  /* margin-bottom: 8px; */
+  z-index: 9999;  /* Header置顶，让阴影置于Main的背景颜色之上 */
+}
+.Header .title{
+  width: 15vw;
+  margin-left: 2vw;
+  align-items: center;
+}
+.Header .search-box{
+  width: 40vw;
+  height: 3.5vh;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 60px;
+  border: 1px solid #8B8B8B;
+  background-color: #F0F0F0;
+  padding: 0 0.5vw;
+}
+.Header .Personalization{
+  width: 15vw;
+  height: 3vh;
+  align-items: center;
+}
+
+
+.Main {
+  width: 100%;
+  height: 95vh;
+  flex-direction: row;
+  flex-grow: 30;
+}
+.Main .controller {
+  height: 100%;
+  width: 18vw;
+  overflow-y: auto;
+  flex-direction: column;
+}
+.Medium_block{
+  padding: 2vh 1vw 2vh 1vw;
+  flex-direction: column;
+}
+.Medium_block .graph{
+  margin-top: 0.5vh;
+  width: 16vw;
+  height: 12vh;
+  justify-content: space-between;
+}
+.Medium_block .graph .clouds{
+  margin-top: 0.5vh;
+  width: 10vw;
+  height: 100%; 
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 2px solid #B4B4B4;
+  background-color: #B4B4B4;
+  border-radius: 4px;
+}
+.Medium_block .graph .clouds .title{
+  width: 100%;
+  flex-grow: 1;
+}
+.Medium_block .legend{
+  margin-top: 0.5vh;
+  width: 16vw;
+  /* height: 10vh; */
+  flex-wrap: wrap;
+}
+
+.Subject_block{
+  margin: 0 1vw 2vh 1vw;
+  /* background-color: aqua; */
+  flex-direction: column;
+}
+.Subject_block .clouds{ 
+  margin-top: 0.5vh;
+  width: 15vw;
+  height: 14vh; 
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 2px solid #B4B4B4;
+  background-color: #B4B4B4;
+  border-radius: 4px;
+}
+.Subject_block .clouds .title{
+  width: 100%;
+  flex-grow: 1;
+}
+.VisualFormat_block{
+  margin: 0 1vw 2vh 1vw;
+  flex-direction: column;
+}
+.VisualFormat_block .checkgroup{
+  flex-wrap: wrap;
+}
+.VisualFormat_block .Title span{
+  font-size: 2vh;
+  font-weight: bold;
+  font-family: Inter;
+}
+.VisualFormat_block .Structure, .Style, .Morphology{
+  flex-direction: column;
+}
+
+.Main .viewer {
+  height: 100%;
+  width: 85vw;
+  background-color: #F5F5F5;
+  overflow-y:auto;
+}
+
+
+.Footer {
+  width: 100%;
+  flex-grow: 2;
+}
+
+
+.no-border-input :deep(.el-input__inner) {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-color: #F0F0F0;
+  padding: 0 2px;
+  width: 100%;
+  height: 100%;
+  font-size: 0.8vw;
+}
+
+.no-border-input :deep(.el-input__wrapper) {
+  box-shadow: none;
+  border: none;
+  background-color: #F0F0F0;
+  width: 100%;
+}

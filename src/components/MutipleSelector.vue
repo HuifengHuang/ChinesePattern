@@ -2,14 +2,14 @@
   <div class="selector" :style="selector_style"> 
     <div class="title" :style="title_style">
       <div class="panel">
-        <span style="font-size: 2vh;">{{ this.title }}</span>
+        <span style="font-size: 2vh; margin-right: 5px;">{{ this.title }}</span>
         <el-checkbox class="panel_checkbox" v-for="item in status_lists" 
             v-model="item['status']" :label="item['text']" size="large" v-show="item['status']"/>
       </div>
       
-      <el-image :src="icon_arrow_up" :style="image_style" fit="fill"/>
+      <el-image :src="icon_arrow_up" :style="image_style" fit="fill" v-on:click="handleClick"/>
     </div>
-    <div class="options">
+    <div class="options" v-if="isActive">
       <el-checkbox v-for="item in status_lists" 
           v-model="item['status']" :label="item['text']" size="large" />
     </div>
@@ -56,13 +56,13 @@ export default {
     }
   },
   created(){
-      this.selector_style = {
-          width: this.size + 'px',
-          "border": (this.isActive)?"1px solid rgba(185, 185, 185, 1)":"none"
-        }
-      this.title_style = {
-          "backgound-color": (this.isActive)?"#5F9DDA40":"none"
-        }
+    this.selector_style = {
+        width: this.size + 'px',
+        "border": (this.isActive)?"1px solid rgba(185, 185, 185, 1)":"none"
+      }
+    this.title_style = {
+        "backgound-color": (this.isActive)?"#5F9DDA40":"none"
+      }
   },
   mounted() {
     this.init();
@@ -75,6 +75,20 @@ export default {
           "status": false
         })
       }
+    },
+    handleClick(){
+      this.isActive = (this.isActive)?false:true;
+    }
+  },
+  watch:{
+    isActive(newVal, oldVal){
+      this.selector_style = {
+        width: this.size + 'px',
+        "border": (this.isActive)?"1px solid rgba(185, 185, 185, 1)":"none"
+      }
+    this.title_style = {
+        "backgound-color": (this.isActive)?"#5F9DDA40":"none"
+      }
     }
   }
 }
@@ -83,7 +97,7 @@ export default {
 
 <style scoped>
 .selector{
-  min-height: 5vh;
+  /* min-height: 5vh; */
   display: flex;
   flex-direction: column;
   border-radius: 5px;

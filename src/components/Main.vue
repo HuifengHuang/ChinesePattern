@@ -33,6 +33,7 @@ export default {
 
         piechartSize: 5.5 * window.innerWidth / 100,
         wordcloudSize: [9.5 * window.innerWidth / 100 ,9.5 * window.innerHeight / 100],
+        subject_wordcloudSize: [14.8 * window.innerWidth / 100 ,11 * window.innerHeight / 100],
         legendSize: 0,
         selectorSize: 15 * window.innerWidth / 100,
         radialbarchartSize: [15 * window.innerWidth / 100, 5 * window.innerHeight / 100],
@@ -50,6 +51,17 @@ export default {
           "Narrativity",
           "Identity",
           "Ideology"
+        ],
+        Structure_list:[
+          "Single (321)",
+          "Repeat (2)",
+          "Tile (3)",
+          "Scene combination (51)",
+          "Decorative combination (13)",
+        ],
+        Style_list:[
+          "Realistic (321)",
+          "Abstract (432)"
         ],
 
         legend_list: [
@@ -111,149 +123,63 @@ export default {
           <div style="margin-top: 1vh;">
             <RadialBarChart :size="radialbarchartSize" />
           </div>
-          
+          <div class="clouds">
+            <div class="title">
+              <span>Subject</span>
+            </div>
+            <WordCloud :size="subject_wordcloudSize" />
+          </div>
         </div>
+
+        <div class="Subject_block">   <!-- Symbols模块 -->
+          <MutipleSelector :size="selectorSize" title="Symbols" :item_list="subject_list"/>
+          <div style="margin-top: 1vh;">
+            <RadialBarChart :size="radialbarchartSize" />
+          </div>
+          <div class="clouds">
+            <div class="title">
+              <span>Symbols</span>
+            </div>
+            <WordCloud :size="subject_wordcloudSize" />
+          </div>
+        </div>
+
+        <div class="VisualFormat_block">   <!-- Visual_Format模块 -->
+          <div class="Title"><span>VisualFormat</span></div>
+          <div class="Structure">
+            <div><span>Structure</span></div>
+            <div class="checkgroup">
+              <el-checkbox v-for="item in Structure_list" :label="item" />
+            </div>
+          </div>
+          <div class="Style">
+            <div><span>Style</span></div>
+            <div class="checkgroup">
+              <el-checkbox v-for="item in Style_list" :label="item" />
+            </div>
+          </div>
+          <div class="Morphology">
+            <div><span>Morphology</span></div>
+            <WordCloud :size="subject_wordcloudSize" style="border: 1px solid #000; box-sizing: border-box;"/>
+          </div>
+        </div>
+
       </div>
 
-      <div class="viewer"></div>
+      <div class="viewer">
+        
+      </div>
     </div>
 
     <!-- 底部栏 -->
-    <div class="Footer">
+    <!-- <div class="Footer">
       Footer
-    </div>
+    </div> -->
   </div>
 </template>
 
 <style scoped>
-div {
-  display: flex;
-}
-
-.container {
-  width: 100vw;
-  height: 100vh;
-  flex-direction: column;
-}
-
-
-.Header {
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  flex-grow: 1;
-  box-shadow: 0 4px 3px 0 rgba(80, 104, 87, 0.25);
-  /* margin-bottom: 8px; */
-  z-index: 9999;  /* Header置顶，让阴影置于Main的背景颜色之上 */
-}
-.Header .title{
-  width: 15vw;
-  margin-left: 2vw;
-  align-items: center;
-}
-.Header .search-box{
-  width: 40vw;
-  height: 3.5vh;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 60px;
-  border: 1px solid #8B8B8B;
-  background-color: #F0F0F0;
-  padding: 0 0.5vw;
-}
-.Header .Personalization{
-  width: 15vw;
-  height: 3vh;
-  align-items: center;
-}
-
-
-.Main {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-grow: 30;
-}
-.Main .controller {
-  height: 100%;
-  width: 18vw;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-.Main .controller .Medium_block{
-  padding: 2vh 1vw 2vh 1vw;
-  display: flex;
-  flex-direction: column;
-}
-.Main .controller .Medium_block .graph{
-  margin-top: 0.5vh;
-  width: 16vw;
-  height: 12vh;
-  display: flex;
-  justify-content: space-between;
-}
-.Main .controller .Medium_block .graph .clouds{
-  margin-top: 0.5vh;
-  width: 10vw;
-  height: 100%; 
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  border: 2px solid #B4B4B4;
-  background-color: #B4B4B4;
-  border-radius: 4px;
-}
-.Main .controller .Medium_block .graph .clouds .title{
-  width: 100%;
-  flex-grow: 1;
-}
-.Main .controller .Medium_block .legend{
-  margin-top: 0.5vh;
-  width: 16vw;
-  /* height: 10vh; */
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.Main .controller .Subject_block{
-  margin: 2vh 1vw 2vh 1vw;
-  /* background-color: aqua; */
-  display: flex;
-  flex-direction: column;
-}
-
-.Main .viewer {
-  height: 100%;
-  width: 85vw;
-  background-color: #F5F5F5;
-  overflow-y:auto;
-}
-
-
-.Footer {
-  width: 100%;
-  flex-grow: 2;
-}
-
-
-.no-border-input :deep(.el-input__inner) {
-  border: none;
-  outline: none;
-  box-shadow: none;
-  background-color: #F0F0F0;
-  padding: 0 2px;
-  width: 100%;
-  height: 100%;
-  font-size: 0.8vw;
-}
-
-.no-border-input :deep(.el-input__wrapper) {
-  box-shadow: none;
-  border: none;
-  background-color: #F0F0F0;
-  width: 100%;
-}
+  @import url('../style/main.css');
 </style>
 
 
