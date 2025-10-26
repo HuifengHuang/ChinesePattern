@@ -4,6 +4,7 @@ import PieChart from './components/PieChart.vue'
 import WordCloud from './components/WordCloud.vue';
 import MutipleSelector from './components/MutipleSelector.vue';
 import RadialBarChart from './components/RadialBarChart.vue';
+import Card from './components/Card.vue';
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import RadialBarChart from './components/RadialBarChart.vue';
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
   <!-- <RadialBarChart /> -->
+  <!-- <Card /> -->
 </template>
 
 <style scoped>

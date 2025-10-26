@@ -120,9 +120,10 @@ div {
 
 .Main .viewer {
   height: 100%;
-  width: 85vw;
+  width: 82vw;
   background-color: #F5F5F5;
-  overflow-y:auto;
+  overflow: auto;
+  flex-wrap: wrap;
 }
 
 
