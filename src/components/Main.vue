@@ -87,14 +87,30 @@
       </div>
 
       <div class="viewer">
-        <Card :size="cardSize" v-for="value in Card_list" style="margin: 1vh 0.7vw;"/>
+        <Card :size="cardSize" v-for="value in Card_list" style="margin: 0.5vw 0.5vw;"/>
       </div>
     </div>
 
     <!-- 底部栏 -->
-    <!-- <div class="Footer">
-      Footer
-    </div> -->
+    <div class="Footer">
+      <div class="History_period">
+        <div class="selector">
+          <span>History Period</span>
+          <img :src="icon_arrow_up" style="object-fit: contain;"  v-on:click="showHistorySelector"/>
+        </div>
+        <div class="labels">
+          <el-checkbox v-for="item in history_period" v-show="item['status']"
+            v-model="item['status']" :label="item['period']" size="normal" />
+        </div>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- History Period 展开栏 -->
+    <div class="history_selector" v-show="history_selector_show">
+      <el-checkbox v-for="item in history_period" 
+          v-model="item['status']" :label="item['period']" font-size="smaller" />
+    </div>
   </div>
 </template>
 
@@ -113,6 +129,7 @@ import icon_like from '../assets/images/icon_like.png';
 import icon_trans from '../assets/images/icon_trans.png';
 import icon_arrow_up from '../assets/images/arrow_up.png';
 
+import axios from 'axios';
 
 export default {
   name: 'Main',
@@ -140,7 +157,7 @@ export default {
         selectorSize: 15 * window.innerWidth / 100,
         radialbarchartSize: [15 * window.innerWidth / 100, 5 * window.innerHeight / 100],
         cardSize:[
-          (82 - 7) * window.innerWidth / 100 / 5 - 3, (82 - 7) * window.innerWidth / 100 / 5 * 1.6, 
+          (82 - 5) * window.innerWidth / 100 / 6 - 8, (82 - 5) * window.innerWidth / 100 / 6 * 1.5
         ],
 
         medium_list:[
@@ -175,16 +192,64 @@ export default {
           { color: "#18B8EB", text: "Sculpture (123)"},
           { color: "#F38BA6", text: "Adornment & Ornament (123)"},
           { color: "#C8DA55", text: "Pictorial works (123)"},
-          { color: "#00B88E", text: "Architecture (123)"},
+          { color: "#00B88E", text: "Architecture (123)"}
         ],
 
         Card_list:[
           1,2,3,4,5,6,7,8,9,10,11,12,13,14
-        ]
+        ],
+
+        history_period:[
+          {"period": "Stone Age", "status":false},
+          {"period": "Shang", "status":false},
+          {"period": "West Zhou", "status":false},
+          {"period": "Spring and Autumn & Warring States", "status":false},
+          {"period": "Qin", "status":false},
+          {"period": "Han", "status":false},
+          {"period": "Two Jins", "status":false},
+          {"period": "North-South", "status":false},
+          {"period": "Tang", "status":false},
+          {"period": "Song", "status":false},
+          {"period": "Yuan", "status":false},
+          {"period": "Ming", "status":false},
+          {"period": "Qing","status":false}
+        ],
+
+        history_selector_show: false,
+
+        /**     result示例
+          {           
+            "name": "long",
+            "symbols": [],
+            "mediums": [],
+            "times": [],
+            "image": null
+          }
+        */
+        results:[],
       };
     },
     created(){
-      console.log(window.innerWidth);
+      // console.log(window.innerWidth);
+    },
+    methods:{
+      showHistorySelector(){
+        this.history_selector_show = (this.history_selector_show)?false:true;
+      },
+      async loadImage(){
+        try {
+          // 假设后端返回图片列表
+          const response = await axios.get('http://localhost:5000/api/images');
+          this.imageList = response.data.images.map(img => ({
+            ...img,
+            url: `http://localhost:5000/images/${img.filename}`
+          }));
+        } catch (error) {
+          console.error('加载图片列表失败:', error);
+        } finally {
+          this.loading = false;
+        }
+      },
     }
 }
 

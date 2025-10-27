@@ -15,7 +15,6 @@ div {
   align-items: center;
   height: 5vh;
   box-shadow: 0 4px 3px 0 rgba(80, 104, 87, 0.25);
-  /* margin-bottom: 8px; */
   z-index: 9999;  /* Header置顶，让阴影置于Main的背景颜色之上 */
 }
 .Header .title{
@@ -42,7 +41,7 @@ div {
 
 .Main {
   width: 100%;
-  height: 95vh;
+  height: 85vh;
   flex-direction: row;
   flex-grow: 30;
 }
@@ -129,7 +128,46 @@ div {
 
 .Footer {
   width: 100%;
-  flex-grow: 2;
+  height: 10vh;
+  flex-direction: column;
+  box-shadow: 0 -4px 3px 0 rgba(80, 104, 87, 0.25);
+  z-index: 9999;  /* Header置顶，让阴影置于Main的背景颜色之上 */
+}
+.History_period{
+  height: 35%;
+  width: auto;
+  align-items: center;
+}
+.History_period .selector{
+  margin-left: 1vw;
+  width: 10vw;
+}
+.History_period .selector span{
+  font-size: large;
+  margin-right: 0.5vw;
+}
+
+.History_period .labels{
+  align-items: center;
+}
+.History_period .labels label{
+  background-color: #FAC63280;
+  margin: 0 0.2vw;
+  border-radius: 5px;
+  padding: 0 0.2vw;
+}
+
+.history_selector{
+  width: 16vw;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0.5vw;
+  bottom: 10vh;
+  background-color: #F3F3F3;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #B9B9B9;
 }
 
 
