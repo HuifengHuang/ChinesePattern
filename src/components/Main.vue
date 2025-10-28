@@ -8,7 +8,7 @@
         </div>
         <div class="search-box">
           <el-input class="no-border-input" v-model="input_value" style="width: 35vw" placeholder="Please input" />
-          <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;" fit="fill"/>
+          <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;" fit="fill" v-on:click="search()"/>
         </div>
         <div class="Personalization">
           <el-image :src="icon_like" style="width: 2.5vw;height: 2.5vh;" fit="fill"/>
@@ -100,7 +100,7 @@
         </div>
         <div class="labels">
           <el-checkbox v-for="item in history_period" v-show="item['status']"
-            v-model="item['status']" :label="item['period']" size="normal" />
+            v-model="item['status']" :label="item['period']"  />
         </div>
       </div>
       <div></div>
@@ -130,6 +130,7 @@ import icon_trans from '../assets/images/icon_trans.png';
 import icon_arrow_up from '../assets/images/arrow_up.png';
 
 import axios from 'axios';
+import { contourDensity } from 'd3';
 
 export default {
   name: 'Main',
@@ -217,7 +218,7 @@ export default {
 
         history_selector_show: false,
 
-        /**     result示例
+        /**     filtered_data 示例
           {           
             "name": "long",
             "symbols": [],
@@ -226,6 +227,7 @@ export default {
             "image": null
           }
         */
+        filtered_data:[],
         results:[],
       };
     },
@@ -236,19 +238,25 @@ export default {
       showHistorySelector(){
         this.history_selector_show = (this.history_selector_show)?false:true;
       },
-      async loadImage(){
-        try {
-          // 假设后端返回图片列表
-          const response = await axios.get('http://localhost:5000/api/images');
-          this.imageList = response.data.images.map(img => ({
-            ...img,
-            url: `http://localhost:5000/images/${img.filename}`
-          }));
-        } catch (error) {
-          console.error('加载图片列表失败:', error);
-        } finally {
-          this.loading = false;
-        }
+      // async loadImage(){
+      //   try {
+      //     // 假设后端返回图片列表
+      //     const response = await axios.get('http://localhost:5000/api/images');
+      //     this.results = response.data;
+      //   } catch (error) {
+      //     console.error('加载图片列表失败:', error);
+      //   }
+      // },
+      async search(){
+        axios.post(this.$BackendUrl + '/search', {
+          "key_word": this.input_value,
+        }).then(response => {
+          this.results = response.data;
+          console.log(this.results[0]);
+        });
+      },
+      filter(){
+
       },
     }
 }

@@ -1,13 +1,24 @@
 from flask import Flask, send_file, send_from_directory, jsonify, request
 import os
 from flask_cors import CORS
+import csv
 
 app = Flask(__name__)
 CORS(app)
 
 # 存储图片的目录
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'E:\kangziyao\CodingSapce\ChinesePattern\python'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+with open(UPLOAD_FOLDER + '\Chinese Pattern.csv', 'r', encoding='utf-8') as file:
+    reader = csv.DictReader(file)
+
+    keyW = '龙'
+    for row in reader:
+        for value in row.values():
+            if keyW in value:
+                print(row)
+                break
+
 
 @app.route('/images/<filename>')
 def get_image(filename):
@@ -27,13 +38,22 @@ def get_image_info():
     }
     return jsonify(image_info)
 
-# 提供静态文件访问
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static', filename)
-
-
-@app.route('search')
+@app.route('/search', methods=['POST'])
 def search():
-    key_word = request.args.get('key_word')
-    
+    req = request.get_json()
+    key_word = req['key_word']
+    print(key_word)
+    results = []
+    with open(UPLOAD_FOLDER + '\Chinese Pattern.csv', 'r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            for value in row.values():
+                if key_word in value:
+                    results.append(row)
+                    break
+    print(results)
+    return jsonify(results)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
