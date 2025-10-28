@@ -7,26 +7,18 @@ app = Flask(__name__)
 CORS(app)
 
 # 存储图片的目录
-UPLOAD_FOLDER = 'E:\kangziyao\CodingSapce\ChinesePattern\python'
+UPLOAD_FOLDER = 'D:\RA工作目录\code workspace\ChinesePattern\python'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-with open(UPLOAD_FOLDER + '\Chinese Pattern.csv', 'r', encoding='utf-8') as file:
-    reader = csv.DictReader(file)
-
-    keyW = '龙'
-    for row in reader:
-        for value in row.values():
-            if keyW in value:
-                print(row)
-                break
 
 
 @app.route('/images/<filename>')
 def get_image(filename):
     """直接返回图片文件"""
     try:
-        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+        return send_from_directory(app.config['UPLOAD_FOLDER'] + '\images', filename + '.png')
     except FileNotFoundError:
         return jsonify({'error': '文件不存在'}), 404
+
 
 @app.route('/get-image-info')
 def get_image_info():
@@ -37,6 +29,7 @@ def get_image_info():
         'description': '示例图片'
     }
     return jsonify(image_info)
+
 
 @app.route('/search', methods=['POST'])
 def search():

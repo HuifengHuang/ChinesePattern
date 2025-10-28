@@ -76,7 +76,6 @@ export default {
             this.maxFrequency = Math.max(this.maxFrequency, item['frequencys'][index]);
         }
       }
-      console.log(this.maxFrequency);
       return data;
     },
     

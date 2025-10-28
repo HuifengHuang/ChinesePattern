@@ -13,19 +13,17 @@
       <div class="info">
         <div class="time">
           <span :style="text_size">{{ dataset.time.first_time }}</span>
-          <span :style="second_size">{{ dataset.time.second_time }}</span>
-          <span :style="second_size">{{ dataset.time.third_time }}</span>
+          <span :style="second_size" v-for="value in dataset.time.other_time">{{ value }}</span>
         </div>
         <div class="medium">
           <span :style="text_size">{{ dataset.medium.first_medium }}</span>
-          <span :style="second_size">{{ dataset.medium.second_medium }}</span>
-          <span :style="second_size">{{ dataset.medium.third_medium }}</span>
+          <span :style="second_size" v-for="value in dataset.medium.other_medium">{{ value }}</span>
         </div>
       </div>
-      <div class="interact">
+      <div class="subject">
         <div class="btn">
-          <span class="span" :style="text_size">Identity</span>
-          <span class="span" :style="text_size">Power</span>
+          <span class="span" :style="text_size">{{ dataset.subject.first_subject }}</span>
+          <span class="span" :style="text_size"  v-for="value in dataset.subject.other_subject">{{ value }}</span>
         </div>
         <div class="icon">
 
@@ -37,6 +35,7 @@
 
 <script> 
 import dragon_image from '../assets/images/test/龙_001 (1).png'
+import axios from 'axios';
 
 export default {
   name: 'Card',
@@ -51,16 +50,18 @@ export default {
         name: "Dragon",
         time: {
           first_time: "Ming Dyn.",
-          second_time: "Dingling Mausoleum,",
-          third_time: "Beijing"
+          other_time: ["Dingling Mausoleum","Beijing"]
         },
         medium: {
           first_medium: "Textile-Emroidery",
-          second_medium: "Gold-threaded",
-          third_medium: "Zhuanghua Satin"
+          other_medium: ["Gold-threaded","Zhuanghua Satin"]
+        },
+        subject:{
+          first_subject: "Identity",
+          other_subject: ["Power"]
         },
         symbols: ["Long", "Cloud", "Rock", "Wave"],
-        image_path: "test/龙_001 (1).png",
+        image: "龙_001 (2).png",
       }
     }
   },
@@ -70,7 +71,7 @@ export default {
         width: this.size[0] + 'px',
         height: this.size[1] + 'px'
       },
-      image_path: dragon_image,
+      image_path: null,
       name_size:{
         'font-size' : this.size[1] * 0.7 * 0.1 * 0.6 + 'px',
       },
@@ -83,6 +84,24 @@ export default {
         'color': '#8B8B8B',
         'margin-left': '5px'
       },
+    }
+  },
+  created(){
+    this.getImage();
+  },
+  methods:{
+    async getImage(){
+      try {
+          // 发送GET请求到Flask后端
+          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.image, {
+              responseType: 'blob' // 重要：指定响应类型为blob
+          });
+          // 将响应数据转换为可显示的URL
+          const blob = new Blob([response.data], { type: response.headers['content-type'] });
+          this.image_path =  URL.createObjectURL(blob);
+      } catch (err) {
+          console.error('获取图片失败:', err);
+      } 
     }
   }
 }
@@ -162,18 +181,18 @@ div{
   align-items: end;
   flex-wrap: wrap;
 }
-.desc .interact{
+.desc .subject{
   height: 40%;
   width: 100%;
   justify-content: space-between;
 }
-.desc .interact .btn{
+.desc .subject .btn{
   height: auto;
-  width: 50%;
+  /* width: 50%; */
   align-items: end;
   padding-bottom: 5px;
 }
-.desc .interact .btn .span{
+.desc .subject .btn .span{
   color: #000;
   font-family: Inter;
   font-style: normal;

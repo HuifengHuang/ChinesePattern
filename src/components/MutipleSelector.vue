@@ -3,15 +3,15 @@
     <div class="title" :style="title_style">
       <div class="panel">
         <span style="font-size: 2vh; margin-right: 5px;">{{ this.title }}</span>
-        <el-checkbox class="panel_checkbox" v-for="item in status_lists" 
-            v-model="item['status']" :label="item['text']" size="large" v-show="item['status']"/>
+        <el-checkbox class="panel_checkbox" v-for="item in item_list" 
+            v-model="item['status']" :label="item['name']" size="large" v-show="item['status']"/>
       </div>
       
       <el-image :src="icon_arrow_up" :style="image_style" fit="fill" v-on:click="handleClick"/>
     </div>
     <div class="options" v-if="isActive">
-      <el-checkbox v-for="item in status_lists" 
-          v-model="item['status']" :label="item['text']" size="large" />
+      <el-checkbox v-for="item in item_list"
+          v-model="item['status']" :label="item['name']" size="large" />
     </div>
   </div>
 </template> 
@@ -29,12 +29,12 @@ export default {
     item_list:{
       type: Array,
       default: [
-        "Utensil & Vessel",
-        "Sculpture",
-        "Textile",
-        "Adornment & Ornament",
-        "Pictorial work",
-        "Architecture",
+        {"name":"Utensil & Vessel", "status":false},
+        {"name":"Sculpture", "status":false},
+        {"name":"Textile", "status":false},
+        {"name":"Adornment & Ornament", "status":false},
+        {"name":"Pictorial work", "status":false},
+        {"name":"Architecture", "status":false},
       ]
     },
     size:{
@@ -78,7 +78,7 @@ export default {
     },
     handleClick(){
       this.isActive = (this.isActive)?false:true;
-    }
+    },
   },
   watch:{
     isActive(newVal, oldVal){
@@ -86,10 +86,16 @@ export default {
         width: this.size + 'px',
         "border": (this.isActive)?"1px solid rgba(185, 185, 185, 1)":"none"
       }
-    this.title_style = {
+      this.title_style = {
         "backgound-color": (this.isActive)?"#5F9DDA40":"none"
       }
-    }
+    },
+    // item_list:{
+    //   handler(newVal, oldVal){
+    //     console.log(newVal);
+    //   },
+    //   deep: true,
+    // }
   }
 }
 

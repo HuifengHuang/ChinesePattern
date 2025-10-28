@@ -21,7 +21,7 @@
       <div class="controller"> <!-- 左侧控制栏 -->
         
         <div class="Medium_block"> <!-- Medium模块 -->
-          <MutipleSelector :size="selectorSize" />
+          <MutipleSelector :size="selectorSize" title="Medium" :item_list="medium_list"/>
           <div class="graph">
             <PieChart :size="piechartSize" />
 
@@ -52,7 +52,7 @@
         </div>
 
         <div class="Subject_block">   <!-- Symbols模块 -->
-          <MutipleSelector :size="selectorSize" title="Symbols" :item_list="subject_list"/>
+          <MutipleSelector :size="selectorSize" title="Symbols" :item_list="symbol_list"/>
           <div style="margin-top: 1vh;">
             <RadialBarChart :size="radialbarchartSize" />
           </div>
@@ -87,7 +87,7 @@
       </div>
 
       <div class="viewer">
-        <Card :size="cardSize" v-for="value in Card_list" style="margin: 0.5vw 0.5vw;"/>
+        <Card :size="cardSize" v-for="value in filtered_data" :dataset="value" style="margin: 0.5vw 0.5vw;"/>
       </div>
     </div>
 
@@ -130,7 +130,6 @@ import icon_trans from '../assets/images/icon_trans.png';
 import icon_arrow_up from '../assets/images/arrow_up.png';
 
 import axios from 'axios';
-import { contourDensity } from 'd3';
 
 export default {
   name: 'Main',
@@ -162,18 +161,44 @@ export default {
         ],
 
         medium_list:[
-          "Utensil & Vessel",
-          "Sculpture",
-          "Textile",
-          "Adornment & Ornament",
-          "Pictorial work",
-          "Architecture"
+          {"name":"器物", "status":false},
+          {"name":"Sculpture", "status":false},
+          {"name":"织绣", "status":false},
+          {"name":"装饰", "status":false},
+          {"name":"平面绘画", "status":false},
+          {"name":"建筑 ", "status":false},
+        ],
+        medium_list_en:[
+          {"name":"Utensil & Vessel", "status":false},
+          {"name":"Sculpture", "status":false},
+          {"name":"Textile", "status":false},
+          {"name":"Adornment & Ornament", "status":false},
+          {"name":"Pictorial work", "status":false},
+          {"name":"Architecture", "status":false},
         ],
         subject_list:[
-          "Auspiciousness",
-          "Narrativity",
-          "Identity",
-          "Ideology"
+          {"name":"吉祥", "status":false},
+          {"name":"叙事", "status":false},
+          {"name":"身份", "status":false},
+          {"name":"思想", "status":false},
+        ],
+        subject_list_en:[
+          {"name":"Auspiciousness", "status":false},
+          {"name":"Narrativity", "status":false},
+          {"name":"Identity", "status":false},
+          {"name":"Ideology", "status":false},
+        ],
+        symbol_list:[
+          {"name":"生物", "status":false},
+          {"name":"自然", "status":false},
+          {"name":"人与人造物", "status":false},
+          {"name":"其他", "status":false},
+        ],    
+        symbol_list_en:[
+          {"name":"Creature", "status":false},
+          {"name":"Nature", "status":false},
+          {"name":"Human", "status":false},
+          {"name":"Others", "status":false},
         ],
         Structure_list:[
           "Single (321)",
@@ -221,9 +246,18 @@ export default {
         /**     filtered_data 示例
           {           
             "name": "long",
-            "symbols": [],
-            "mediums": [],
-            "times": [],
+            "symbols": {
+              "first_symbol": "",
+              "other_symbol": []
+            },
+            "mediums": {
+              "first_medium": "",
+              "other_medium": []
+            },
+            "times": {
+              "first_time": "",
+              "other_time": []
+            },
             "image": null
           }
         */
@@ -232,6 +266,7 @@ export default {
       };
     },
     created(){
+
       // console.log(window.innerWidth);
     },
     methods:{
@@ -252,11 +287,66 @@ export default {
           "key_word": this.input_value,
         }).then(response => {
           this.results = response.data;
-          console.log(this.results[0]);
+          this.filter();
+          // console.log(this.results[0]);
         });
       },
       filter(){
-
+        // Medium 检查
+        const mediums = [], subjects = [], symbols = [], times = [];
+        
+        for(const medium of this.medium_list) if(medium.status)mediums.push(medium.name);
+        for(const subject of this.subject_list) if(subject.status)subjects.push(subject.name);
+        for(const symbol of this.symbol_list) if(symbol.status)symbols.push(symbol.name);
+        console.log(mediums);
+        var result = [];
+        for(const feature of this.results){
+          var flag = true;
+          if(mediums.length != 0)flag = flag && mediums.includes(feature['medium_lv1_cn']);
+          if(subjects.length != 0)flag = flag && subjects.includes(feature['subject_lv1_cn']);
+          if(symbols.length != 0)flag = flag && symbols.includes(feature['symbol_lv1_cn']);
+          if(flag){
+            result.push({
+              name: feature['name_cn'],
+              time: {
+                first_time: feature['time_lv1_cn'],
+                other_time: [feature['time_lv2_cn']]
+              },
+              medium: {
+                first_medium: feature['medium_lv1_cn'],
+                other_medium: [feature['medium_lv2_cn'], feature['medium_lv3_cn']]
+              },
+              subject:{
+                first_subject: feature['subject_lv1_cn'],
+                other_subject: [feature['subject_lv2_cn']]
+              },
+              symbols: [feature['subject_lv1_cn'],feature['subject_lv2_cn']],
+              image: feature['fileName_cn'],
+            })
+          }
+        }
+        this.filtered_data = result;
+        console.log(result);
+      },
+    },
+    watch:{
+      medium_list:{
+        handler(newVal, oldVal){
+          this.filter();
+        },
+        deep: true,
+      },
+      subject_list:{
+        handler(newVal, oldVal){
+          this.filter();
+        },
+        deep: true,
+      },
+      symbol_list:{
+        handler(newVal, oldVal){
+          this.filter();
+        },
+        deep: true,
       },
     }
 }
