@@ -103,7 +103,15 @@ export default {
           console.error('获取图片失败:', err);
       } 
     }
-  }
+  },
+    watch:{
+      dataset:{
+        handler(newVal, oldVal){
+            this.getImage();
+        },
+        deep: true,
+        },
+    }
 }
 </script>
 

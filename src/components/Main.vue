@@ -8,7 +8,7 @@
         </div>
         <div class="search-box">
           <el-input class="no-border-input" v-model="input_value" style="width: 35vw" placeholder="Please input" />
-          <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;" fit="fill" v-on:click="search()"/>
+          <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;cursor: pointer;" fit="fill" v-on:click="search()"/>
         </div>
         <div class="Personalization">
           <el-image :src="icon_like" style="width: 2.5vw;height: 2.5vh;" fit="fill"/>
@@ -226,19 +226,19 @@ export default {
         ],
 
         history_period:[
-          {"period": "Stone Age", "status":false},
-          {"period": "Shang", "status":false},
-          {"period": "West Zhou", "status":false},
-          {"period": "Spring and Autumn & Warring States", "status":false},
-          {"period": "Qin", "status":false},
-          {"period": "Han", "status":false},
-          {"period": "Two Jins", "status":false},
-          {"period": "North-South", "status":false},
-          {"period": "Tang", "status":false},
-          {"period": "Song", "status":false},
-          {"period": "Yuan", "status":false},
-          {"period": "Ming", "status":false},
-          {"period": "Qing","status":false}
+          {"period": "石器时代", "status":false},
+          {"period": "商代", "status":false},
+          {"period": "西周", "status":false},
+          {"period": "春秋", "status":false},
+          {"period": "秦代", "status":false},
+          {"period": "汉", "status":false},
+          {"period": "魏晋", "status":false},
+          {"period": "南北朝", "status":false},
+          {"period": "唐代", "status":false},
+          {"period": "宋代", "status":false},
+          {"period": "元代", "status":false},
+          {"period": "明代", "status":false},
+          {"period": "清代","status":false}
         ],
 
         history_selector_show: false,
@@ -298,6 +298,7 @@ export default {
         for(const medium of this.medium_list) if(medium.status)mediums.push(medium.name);
         for(const subject of this.subject_list) if(subject.status)subjects.push(subject.name);
         for(const symbol of this.symbol_list) if(symbol.status)symbols.push(symbol.name);
+        for(const time of this.history_period) if(time.status)times.push(time.name);
         console.log(mediums);
         var result = [];
         for(const feature of this.results){
@@ -305,6 +306,7 @@ export default {
           if(mediums.length != 0)flag = flag && mediums.includes(feature['medium_lv1_cn']);
           if(subjects.length != 0)flag = flag && subjects.includes(feature['subject_lv1_cn']);
           if(symbols.length != 0)flag = flag && symbols.includes(feature['symbol_lv1_cn']);
+          if(times.length != 0)flag = flag && times.includes(feature['time_lv1_cn ']);
           if(flag){
             result.push({
               name: feature['name_cn'],
@@ -320,7 +322,7 @@ export default {
                 first_subject: feature['subject_lv1_cn'],
                 other_subject: [feature['subject_lv2_cn']]
               },
-              symbols: [feature['subject_lv1_cn'],feature['subject_lv2_cn']],
+              symbols: [feature['symbol_lv1_cn'],feature['symbol_lv2_cn']],
               image: feature['fileName_cn'],
             })
           }
@@ -343,6 +345,12 @@ export default {
         deep: true,
       },
       symbol_list:{
+        handler(newVal, oldVal){
+          this.filter();
+        },
+        deep: true,
+      },
+      history_period:{
         handler(newVal, oldVal){
           this.filter();
         },

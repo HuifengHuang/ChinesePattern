@@ -5,15 +5,17 @@ import WordCloud from './components/WordCloud.vue';
 import MutipleSelector from './components/MutipleSelector.vue';
 import RadialBarChart from './components/RadialBarChart.vue';
 import Card from './components/Card.vue';
+import Details from './components/Details.vue';
 </script>
 
 <template>
-  <Main />
+  <!-- <Main /> -->
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
   <!-- <RadialBarChart /> -->
   <!-- <Card /> -->
+  <Details />
 </template>
 
 <style scoped>
