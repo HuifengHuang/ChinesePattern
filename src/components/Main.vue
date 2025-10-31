@@ -112,6 +112,8 @@
           v-model="item['status']" :label="item['period']" font-size="smaller" />
     </div>
   </div>
+  <div class="mask"></div>
+  <Details class="details"/>
 </template>
 
 <script>
@@ -121,6 +123,7 @@ import Legend from './Legend.vue';
 import MutipleSelector from './MutipleSelector.vue';
 import RadialBarChart from './RadialBarChart.vue';
 import Card from './Card.vue';
+import Details from './Details.vue';
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -139,7 +142,8 @@ export default {
     Legend,
     MutipleSelector,
     RadialBarChart,
-    Card
+    Card,
+    Details
   },
   data() {
       return {
@@ -364,6 +368,24 @@ export default {
 
 <style scoped>
   @import url('../style/main.css');
+.details{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  width: 50vw;
+  height: 60vh;
+}
+.mask{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0%;
+  left: 0%;
+  background-color: #00000040;
+  z-index: 3;
+}
 </style>
 
 

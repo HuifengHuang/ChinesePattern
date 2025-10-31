@@ -9,13 +9,13 @@ import Details from './components/Details.vue';
 </script>
 
 <template>
-  <!-- <Main /> -->
+  <Main />
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
   <!-- <RadialBarChart /> -->
   <!-- <Card /> -->
-  <Details />
+  <!-- <Details /> -->
 </template>
 
 <style scoped>
