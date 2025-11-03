@@ -3,15 +3,15 @@
     <div class="title" :style="title_style">
       <div class="panel">
         <span style="font-size: 2vh; margin-right: 5px;">{{ this.title }}</span>
-        <el-checkbox class="panel_checkbox" v-for="item in item_list" 
-            v-model="item['status']" :label="item['name']" size="large" v-show="item['status']"/>
+        <el-checkbox class="panel_checkbox" v-for="(label, index) in item_labels"
+            v-model="item_status[index]" :label=label size="large" v-show="item_status[index]"/>
       </div>
       
       <el-image :src="icon_arrow_up" :style="image_style" fit="fill" v-on:click="handleClick"/>
     </div>
     <div class="options" v-if="isActive">
-      <el-checkbox v-for="item in item_list"
-          v-model="item['status']" :label="item['name']" size="large" />
+      <el-checkbox v-for="(label, index) in item_labels"
+          v-model="item_status[index]" :label=label size="large" />
     </div>
   </div>
 </template> 
@@ -26,15 +26,21 @@ export default {
       type: String,
       default: "Medium",
     },
-    item_list:{
+    item_labels:{
+      type: Array,
+      default:[
+        "Utensil & Vessel",
+        "Sculpture",
+        "Textile",
+        "Adornment & Ornament",
+        "Pictorial work",
+        "Architecture"
+      ]
+    },
+    item_status:{
       type: Array,
       default: [
-        {"name":"Utensil & Vessel", "status":false},
-        {"name":"Sculpture", "status":false},
-        {"name":"Textile", "status":false},
-        {"name":"Adornment & Ornament", "status":false},
-        {"name":"Pictorial work", "status":false},
-        {"name":"Architecture", "status":false},
+        false, false, false, false, false, false,
       ]
     },
     size:{
@@ -52,7 +58,6 @@ export default {
         width: 0.1 * this.size  + 'px',
         height: 0.05 * this.size + 'px'
       },
-      status_lists:[],
     }
   },
   created(){
@@ -64,18 +69,7 @@ export default {
         "backgound-color": (this.isActive)?"#5F9DDA40":"none"
       }
   },
-  mounted() {
-    this.init();
-  },
   methods: {
-    init(){
-      for(const item of this.item_list){
-        this.status_lists.push({
-          "text": item,
-          "status": false
-        })
-      }
-    },
     handleClick(){
       this.isActive = (this.isActive)?false:true;
     },

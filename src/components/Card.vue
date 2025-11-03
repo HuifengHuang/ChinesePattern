@@ -1,29 +1,31 @@
 <template>
   <div class="container" :style="container_style">
     <div class="img">
-      <div class="name"><span :style="name_size">{{ dataset.name }}</span></div>
+      <div class="name"><span :style="name_size">{{ dataset[CSV_title_names.name] }}</span></div>
       <div class="image">
         <img :src="image_path" style="object-fit: fill;"></img>
       </div>
       <div class="symbol">
-        <span class="symbol_span" v-for="symbol in dataset.symbols" :style="text_size">{{ symbol }}</span>
+        <span class="symbol_span" :style="text_size">{{ dataset[CSV_title_names.symbol_lv1] }}</span>
+        <span class="symbol_span" :style="text_size">{{ dataset[CSV_title_names.symbol_lv2] }}</span>
       </div>
     </div>
     <div class="desc">
       <div class="info">
         <div class="time">
-          <span :style="text_size">{{ dataset.time.first_time }}</span>
-          <span :style="second_size" v-for="value in dataset.time.other_time">{{ value }}</span>
+          <span :style="text_size">{{ dataset[CSV_title_names.time_lv1] }}</span>
+          <span :style="second_size">{{ dataset[CSV_title_names.time_lv2] }}</span>
         </div>
         <div class="medium">
-          <span :style="text_size">{{ dataset.medium.first_medium }}</span>
-          <span :style="second_size" v-for="value in dataset.medium.other_medium">{{ value }}</span>
+          <span :style="text_size">{{ dataset[CSV_title_names.medium_lv1] }}</span>
+          <span :style="second_size">{{ dataset[CSV_title_names.medium_lv2] }}</span>
+          <span :style="second_size">{{ dataset[CSV_title_names.medium_lv3] }}</span>
         </div>
       </div>
       <div class="subject">
         <div class="btn">
-          <span class="span" :style="text_size">{{ dataset.subject.first_subject }}</span>
-          <span class="span" :style="text_size"  v-for="value in dataset.subject.other_subject">{{ value }}</span>
+          <span class="span" :style="text_size">{{ dataset[CSV_title_names.subject_lv1] }}</span>
+          <span class="span" :style="text_size">{{ dataset[CSV_title_names.subject_lv2] }}</span>
         </div>
         <div class="icon">
 
@@ -34,8 +36,10 @@
 </template>
 
 <script> 
-import dragon_image from '../assets/images/test/龙_001 (1).png'
+import dragon_image from '../assets/images/test/龙_001 (1).png';
 import axios from 'axios';
+import { GetCSVTitleName_CN } from '../common/labels_cn';
+import { GetCSVTitleName_EN } from '../common/labels_en';
 
 export default {
   name: 'Card',
@@ -44,26 +48,43 @@ export default {
       type: Array,
       default: [300, 450]
     },
+    language:{
+      type:String,
+      default: "Chinese"
+    },
     dataset:{
       type: Object,
-      default:{
-        name: "Dragon",
-        time: {
-          first_time: "Ming Dyn.",
-          other_time: ["Dingling Mausoleum","Beijing"]
-        },
-        medium: {
-          first_medium: "Textile-Emroidery",
-          other_medium: ["Gold-threaded","Zhuanghua Satin"]
-        },
-        subject:{
-          first_subject: "Identity",
-          other_subject: ["Power"]
-        },
-        symbols: ["Long", "Cloud", "Rock", "Wave"],
-        image: "龙_001 (2).png",
-      }
-    }
+      default: {
+        'fileLocation': 'test', 
+        'fileName_cn': '龙_001 (1)', 
+        'symbol_lv1_cn': '动物,自然', 
+        'symbol_lv1_en': 'Creature,Nature', 
+        'symbol_lv2_cn': '龙，凤，云', 
+        'symbol_lv2_en': 'dragon, phoenix, cloud', 
+        'name_cn': '虬龙纹', 
+        'name_en': 'Dragon', 
+        'preview': ' ', 
+        'description_cn': '', 
+        'description_en': '', 
+        'medium_lv1_cn': '装饰', 
+        'medium_lv1_en': 'Adornment & Ornament', 
+        'medium_lv2_cn': '玉饰', 
+        'medium_lv3_cn': '玉腰带', 
+        'time_lv1_cn': '春秋', 
+        'time_lv1_en': 'Spring and Autumn', 
+        'time_lv2_cn': '', 
+        'location_cn': '', 
+        'location_en': '', 
+        'subject_lv1_cn': '身份', 
+        'subject_lv2_cn': '皇权，力量', 
+        'subject_lv3_cn': '象征力量与变化，体现战国“蟠螭穿云”的灵动审美', 
+        'subject_lv3_en': '', 
+        'structure_cn': '单体', 
+        'morphology_cn': '对称', 
+        'style_cn': '抽象', 
+        'quality': '低', 
+        'remark': '', '': ''}
+    },
   },
   data(){
     return {
@@ -84,16 +105,22 @@ export default {
         'color': '#8B8B8B',
         'margin-left': '5px'
       },
+      CSV_title_names: [],
     }
   },
   created(){
     this.getImage();
+    this.language_change();
   },
   methods:{
+    language_change(){
+      if(this.language=="English")this.CSV_title_names = GetCSVTitleName_EN();
+      else if(this.language=="Chinese")this.CSV_title_names = GetCSVTitleName_CN();
+    },
     async getImage(){
       try {
           // 发送GET请求到Flask后端
-          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.image, {
+          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.fileName_cn, {
               responseType: 'blob' // 重要：指定响应类型为blob
           });
           // 将响应数据转换为可显示的URL
@@ -110,7 +137,10 @@ export default {
             this.getImage();
         },
         deep: true,
-        },
+      },
+      language:{
+        handler(){this.language_change();}
+      }
     }
 }
 </script>

@@ -4,15 +4,15 @@
     <div class="Header">
         <div class="title">
           <el-image :src="icon_mark" style="width: 3vw;height: 3vh;" fit="fill"/>
-          <span style="font-size: 3vh;">SYSTEMNAME</span>
+          <span style="font-size: 3vh;">{{ label_name.SystemName }}</span>
         </div>
         <div class="search-box">
-          <el-input class="no-border-input" v-model="input_value" style="width: 35vw" placeholder="Please input" />
+          <el-input class="no-border-input" v-model="input_value" style="width: 35vw" :placeholder=label_name.InputHolder />
           <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;cursor: pointer;" fit="fill" v-on:click="search()"/>
         </div>
         <div class="Personalization">
           <el-image :src="icon_like" style="width: 2.5vw;height: 2.5vh;" fit="fill"/>
-          <el-image :src="icon_trans" style="width: 2.5vw;height: 2.5vh;" fit="fill"/>
+          <el-image :src="icon_trans" style="width: 2.5vw;height: 2.5vh;" fit="fill" v-on:click="switch_language()"/>
         </div>
     </div>
 
@@ -21,8 +21,9 @@
       <div class="controller"> <!-- 左侧控制栏 -->
         
         <div class="Medium_block"> <!-- Medium模块 -->
-          <MutipleSelector :size="selectorSize" title="Medium" :item_list="medium_list"/>
-          <div class="graph">
+          <MutipleSelector :size="selectorSize" :title=label_name.MediumName 
+              :item_labels=label_name.MediumItems :item_status="medium_items_status"/>
+          <!-- <div class="graph">
             <PieChart :size="piechartSize" />
 
             <div class="clouds">
@@ -35,12 +36,13 @@
           </div>
           <div class="legend">
             <Legend v-for="item in legend_list" :text="item['text']" :color="item['color']" />
-          </div>
+          </div> -->
         </div>
 
         <div class="Subject_block">   <!-- Subject模块 -->
-          <MutipleSelector :size="selectorSize" title="Subject" :item_list="subject_list"/>
-          <div style="margin-top: 1vh;">
+          <MutipleSelector :size="selectorSize" :title="label_name.SubjectName" 
+              :item_labels=label_name.SubjectItems :item_status="subject_items_status"/>
+          <!-- <div style="margin-top: 1vh;">
             <RadialBarChart :size="radialbarchartSize" />
           </div>
           <div class="clouds">
@@ -48,12 +50,13 @@
               <span>Subject</span>
             </div>
             <WordCloud :size="subject_wordcloudSize" />
-          </div>
+          </div> -->
         </div>
 
         <div class="Subject_block">   <!-- Symbols模块 -->
-          <MutipleSelector :size="selectorSize" title="Symbols" :item_list="symbol_list"/>
-          <div style="margin-top: 1vh;">
+          <MutipleSelector :size="selectorSize" :title="label_name.SymbolsName" 
+              :item_labels=label_name.SymbolsItems :item_status="symbols_items_status"/>
+          <!-- <div style="margin-top: 1vh;">
             <RadialBarChart :size="radialbarchartSize" />
           </div>
           <div class="clouds">
@@ -61,33 +64,36 @@
               <span>Symbols</span>
             </div>
             <WordCloud :size="subject_wordcloudSize" />
-          </div>
+          </div> -->
         </div>
 
         <div class="VisualFormat_block">   <!-- Visual_Format模块 -->
-          <div class="Title"><span>VisualFormat</span></div>
+          <div class="Title"><span>{{ label_name.VisualFormat }}</span></div>
           <div class="Structure">
-            <div><span>Structure</span></div>
+            <div><span>{{label_name.StructureName}}</span></div>
             <div class="checkgroup">
-              <el-checkbox v-for="item in Structure_list" :label="item" />
+              <el-checkbox v-for="(item,index) in label_name.StructureItems" :label="item"
+                  v-model="struture_items_status[index]" />
             </div>
           </div>
           <div class="Style">
-            <div><span>Style</span></div>
+            <div><span>{{ label_name.StyleName }}</span></div>
             <div class="checkgroup">
-              <el-checkbox v-for="item in Style_list" :label="item" />
+              <el-checkbox v-for="(item,index) in label_name.StyleItems" :label="item"
+                  v-model="style_items_status[index]" />
             </div>
           </div>
-          <div class="Morphology">
+          <!-- <div class="Morphology">
             <div><span>Morphology</span></div>
             <WordCloud :size="subject_wordcloudSize" style="border: 1px solid #000; box-sizing: border-box;"/>
-          </div>
+          </div> -->
         </div>
 
       </div>
 
-      <div class="viewer">
-        <Card :size="cardSize" v-for="value in filtered_data" :dataset="value" style="margin: 0.5vw 0.5vw;"/>
+      <div class="viewer">  <!-- 右侧主视图模块 -->
+        <Card :size="cardSize" v-for="value in filtered_data" :dataset="value" :language=language
+            style="margin: 0.5vw 0.5vw;"/>
       </div>
     </div>
 
@@ -95,12 +101,12 @@
     <div class="Footer">
       <div class="History_period">
         <div class="selector">
-          <span>History Period</span>
+          <span>{{ label_name.HistoryName }}</span>
           <img :src="icon_arrow_up" style="object-fit: contain;"  v-on:click="showHistorySelector"/>
         </div>
         <div class="labels">
-          <el-checkbox v-for="item in history_period" v-show="item['status']"
-            v-model="item['status']" :label="item['period']"  />
+          <el-checkbox v-for="(item, index) in label_name.HistoryItems" v-show="history_items_status[index]"
+            v-model="history_items_status[index]" :label="item"  />
         </div>
       </div>
       <div></div>
@@ -108,12 +114,12 @@
 
     <!-- History Period 展开栏 -->
     <div class="history_selector" v-show="history_selector_show">
-      <el-checkbox v-for="item in history_period" 
-          v-model="item['status']" :label="item['period']" font-size="smaller" />
+      <el-checkbox v-for="(item, index) in label_name.HistoryItems" 
+          v-model="history_items_status[index]" :label="item" font-size="smaller" />
     </div>
   </div>
-  <div class="mask"></div>
-  <Details class="details"/>
+  <!-- <div class="mask"></div> -->
+  <!-- <Details class="details"/> -->
 </template>
 
 <script>
@@ -133,6 +139,8 @@ import icon_trans from '../assets/images/icon_trans.png';
 import icon_arrow_up from '../assets/images/arrow_up.png';
 
 import axios from 'axios';
+import { GetLabelName_CN, GetCSVTitleName_CN } from '../common/labels_cn';
+import { GetLabelName_EN, GetCSVTitleName_EN } from '../common/labels_en';
 
 export default {
   name: 'Main',
@@ -164,88 +172,27 @@ export default {
           (82 - 5) * window.innerWidth / 100 / 6 - 8, (82 - 5) * window.innerWidth / 100 / 6 * 1.5
         ],
 
-        medium_list:[
-          {"name":"器物", "status":false},
-          {"name":"Sculpture", "status":false},
-          {"name":"织绣", "status":false},
-          {"name":"装饰", "status":false},
-          {"name":"平面绘画", "status":false},
-          {"name":"建筑 ", "status":false},
-        ],
-        medium_list_en:[
-          {"name":"Utensil & Vessel", "status":false},
-          {"name":"Sculpture", "status":false},
-          {"name":"Textile", "status":false},
-          {"name":"Adornment & Ornament", "status":false},
-          {"name":"Pictorial work", "status":false},
-          {"name":"Architecture", "status":false},
-        ],
-        subject_list:[
-          {"name":"吉祥", "status":false},
-          {"name":"叙事", "status":false},
-          {"name":"身份", "status":false},
-          {"name":"思想", "status":false},
-        ],
-        subject_list_en:[
-          {"name":"Auspiciousness", "status":false},
-          {"name":"Narrativity", "status":false},
-          {"name":"Identity", "status":false},
-          {"name":"Ideology", "status":false},
-        ],
-        symbol_list:[
-          {"name":"生物", "status":false},
-          {"name":"自然", "status":false},
-          {"name":"人与人造物", "status":false},
-          {"name":"其他", "status":false},
-        ],    
-        symbol_list_en:[
-          {"name":"Creature", "status":false},
-          {"name":"Nature", "status":false},
-          {"name":"Human", "status":false},
-          {"name":"Others", "status":false},
-        ],
-        Structure_list:[
-          "Single (321)",
-          "Repeat (2)",
-          "Tile (3)",
-          "Scene combination (51)",
-          "Decorative combination (13)",
-        ],
-        Style_list:[
-          "Realistic (321)",
-          "Abstract (432)"
-        ],
-
-        legend_list: [
-          { color: "#FAC632", text: "Utensil & Vessel (1234)"},
-          { color: "#FE7960", text: "Textile (123)"},
-          { color: "#18B8EB", text: "Sculpture (123)"},
-          { color: "#F38BA6", text: "Adornment & Ornament (123)"},
-          { color: "#C8DA55", text: "Pictorial works (123)"},
-          { color: "#00B88E", text: "Architecture (123)"}
-        ],
-
-        Card_list:[
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14
-        ],
-
-        history_period:[
-          {"period": "石器时代", "status":false},
-          {"period": "商代", "status":false},
-          {"period": "西周", "status":false},
-          {"period": "春秋", "status":false},
-          {"period": "秦代", "status":false},
-          {"period": "汉", "status":false},
-          {"period": "魏晋", "status":false},
-          {"period": "南北朝", "status":false},
-          {"period": "唐代", "status":false},
-          {"period": "宋代", "status":false},
-          {"period": "元代", "status":false},
-          {"period": "明代", "status":false},
-          {"period": "清代","status":false}
-        ],
+        // legend_list: [
+        //   { color: "#FAC632", text: "Utensil & Vessel (1234)"},
+        //   { color: "#FE7960", text: "Textile (123)"},
+        //   { color: "#18B8EB", text: "Sculpture (123)"},
+        //   { color: "#F38BA6", text: "Adornment & Ornament (123)"},
+        //   { color: "#C8DA55", text: "Pictorial works (123)"},
+        //   { color: "#00B88E", text: "Architecture (123)"}
+        // ],
 
         history_selector_show: false,
+
+        language: "English",
+        label_name: [],
+        csv_title_names: [],
+
+        medium_items_status: [false,false,false,false,false,false],
+        subject_items_status: [false,false,false,false],
+        symbols_items_status: [false,false,false,false],
+        struture_items_status: [false,false,false,false,false],
+        style_items_status: [false,false],
+        history_items_status: [false,false,false,false,false,false,false,false,false,false,false,false],
 
         /**     filtered_data 示例
           {           
@@ -270,12 +217,19 @@ export default {
       };
     },
     created(){
+      this.language_change();
+      this.getAllCards();
 
       // console.log(window.innerWidth);
     },
     methods:{
       showHistorySelector(){
         this.history_selector_show = (this.history_selector_show)?false:true;
+      },
+      async getAllCards(){
+        const response = await axios.get(this.$BackendUrl + '/all_cards');
+        this.results = response.data;
+        this.filter();
       },
       // async loadImage(){
       //   try {
@@ -295,71 +249,79 @@ export default {
           // console.log(this.results[0]);
         });
       },
-      filter(){
-        // Medium 检查
+      filter(){           // 过滤器
         const mediums = [], subjects = [], symbols = [], times = [];
         
-        for(const medium of this.medium_list) if(medium.status)mediums.push(medium.name);
-        for(const subject of this.subject_list) if(subject.status)subjects.push(subject.name);
-        for(const symbol of this.symbol_list) if(symbol.status)symbols.push(symbol.name);
-        for(const time of this.history_period) if(time.status)times.push(time.name);
+        for(let i=0;i<this.label_name.MediumItems.length;i++) 
+          if(this.medium_items_status[i])mediums.push(this.label_name.MediumItems[i]);
+
+        for(let i=0;i<this.label_name.SubjectItems.length;i++) 
+          if(this.subject_items_status[i])subjects.push(this.label_name.SubjectItems[i]);
+
+        for(let i=0;i<this.label_name.SymbolsItems.length;i++) 
+          if(this.symbols_items_status[i])symbols.push(this.label_name.SymbolsItems[i]);
+
+        for(let i=0;i<this.label_name.HistoryItems.length;i++) 
+          if(this.history_items_status[i])times.push(this.label_name.HistoryItems[i]);
         console.log(mediums);
         var result = [];
         for(const feature of this.results){
           var flag = true;
-          if(mediums.length != 0)flag = flag && mediums.includes(feature['medium_lv1_cn']);
-          if(subjects.length != 0)flag = flag && subjects.includes(feature['subject_lv1_cn']);
-          if(symbols.length != 0)flag = flag && symbols.includes(feature['symbol_lv1_cn']);
-          if(times.length != 0)flag = flag && times.includes(feature['time_lv1_cn ']);
+          if(mediums.length != 0)flag = flag && mediums.includes(feature[this.csv_title_names.medium_lv1]);
+          if(subjects.length != 0)flag = flag && subjects.includes(feature[this.csv_title_names.subject_lv1]);
+          if(symbols.length != 0)flag = flag && symbols.includes(feature[this.csv_title_names.symbol_lv1]);
+          if(times.length != 0)flag = flag && times.includes(feature[this.csv_title_names.time_lv1]);
           if(flag){
-            result.push({
-              name: feature['name_cn'],
-              time: {
-                first_time: feature['time_lv1_cn'],
-                other_time: [feature['time_lv2_cn']]
-              },
-              medium: {
-                first_medium: feature['medium_lv1_cn'],
-                other_medium: [feature['medium_lv2_cn'], feature['medium_lv3_cn']]
-              },
-              subject:{
-                first_subject: feature['subject_lv1_cn'],
-                other_subject: [feature['subject_lv2_cn']]
-              },
-              symbols: [feature['symbol_lv1_cn'],feature['symbol_lv2_cn']],
-              image: feature['fileName_cn'],
-            })
+            result.push(feature);
           }
         }
         this.filtered_data = result;
-        console.log(result);
+        // console.log(result);
       },
+      switch_language(){
+        this.language = (this.language == "English")?"Chinese":"English";
+      },
+      language_change(){
+        if(this.language=="English"){
+          this.label_name = GetLabelName_EN();
+          this.csv_title_names = GetCSVTitleName_EN();
+        }
+        else if(this.language=="Chinese"){
+          this.label_name = GetLabelName_CN();
+          this.csv_title_names = GetCSVTitleName_CN();
+        }
+      }
     },
     watch:{
-      medium_list:{
+      medium_items_status:{
         handler(newVal, oldVal){
           this.filter();
         },
         deep: true,
       },
-      subject_list:{
+      subject_items_status:{
         handler(newVal, oldVal){
           this.filter();
         },
         deep: true,
       },
-      symbol_list:{
+      symbols_items_status:{
         handler(newVal, oldVal){
           this.filter();
         },
         deep: true,
       },
-      history_period:{
+      history_items_status:{
         handler(newVal, oldVal){
           this.filter();
         },
         deep: true,
       },
+      language:{
+        handler(newVal, oldVal){
+          this.language_change();
+        }
+      }
     }
 }
 

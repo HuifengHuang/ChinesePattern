@@ -49,5 +49,17 @@ def search():
     return jsonify(results)
 
 
+@app.route('/all_cards')
+def all_cards():
+    results = []
+    with open(UPLOAD_FOLDER + '\Chinese Pattern.csv', 'r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['fileName_cn'] is not "":
+                results.append(row)
+    print(results)
+    return jsonify(results)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
