@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="head">
-      <span class="title_text">{{ dataset.name_cn }}</span>
+      <span class="title_text">{{ dataset[CSV_title_names.name] }}</span>
       <div style="align-items: center;">
         <img :src="icon_svg" class="img_style"></img>
         <img :src="icon_png" class="img_style"></img>
@@ -13,52 +13,52 @@
         <img :src="image_path" style="object-fit: fill; aspect-ratio: 1; width: 100%;"></img>
       </div>
       <div class="info_container">
-        <div class="group"><span>Information</span></div>
+        <div class="group"><span>{{ label_name.Information }}</span></div>
         <div class="info">  <!-- Time  -->
-          <div class="name"><span>Time</span></div>
-          <div class="text"><span>{{ dataset.time_lv1_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Time }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.time_lv1] }}</span></div>
         </div>
         <div class="info">  <!-- Location  -->
-          <div class="name"><span>Location</span></div>
-          <div class="text"><span>{{ dataset.location_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Location }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.location] }}</span></div>
         </div>
         <div class="info">  <!-- Medium  -->
-          <div class="name"><span>Medium</span></div>
-          <div class="text"><span>{{ dataset.medium_lv1_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Medium }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.medium_lv1] }}</span></div>
         </div>
-        <div class="group"><span>Content</span></div>
+        <div class="group"><span>{{ label_name.Content }}</span></div>
         <div class="info">  <!-- Symbols  -->
-          <div class="name"><span>Symbols</span></div>
-          <div class="text"><span>{{ dataset.symbol_lv1_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Symbols }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.symbol_lv1] }}</span></div>
         </div>
         <div class="info"  style="flex-grow: 1;">  <!-- Description  -->
-          <div class="name"><span>Description</span></div>
-          <div class="text"><span>{{ dataset.description_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Description }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.description] }}</span></div>
         </div>
         <div class="info">  <!-- Subject  -->
-          <div class="name"><span>Subject</span></div>
-          <div class="text"><span>{{ dataset.subject_lv1_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Subject }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.subject_lv1] }}</span></div>
         </div>
         <div class="info" style="flex-grow: 1;">  <!-- Connotation  -->
-          <div class="name"><span>Connotation</span></div>
-          <div class="text"><span>{{ dataset.description_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Connotation }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.subject_lv3] }}</span></div>
         </div>
-        <div class="group"><span>Visual Format</span></div>
+        <div class="group"><span>{{ label_name.Visual_Format }}</span></div>
         <div class="info">  <!-- Stucture  -->
-          <div class="name"><span>Stucture</span></div>
-          <div class="text"><span>{{ dataset.structure_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Stucture }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.structure] }}</span></div>
         </div>
         <div class="info">  <!-- Style  -->
-          <div class="name"><span>Style</span></div>
-          <div class="text"><span>{{ dataset.style_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Style }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.style] }}</span></div>
         </div>
         <div class="info"> <!-- Morphology  -->
-          <div class="name"><span>Morphology</span></div>
-          <div class="text"><span>{{ dataset.morphology_cn }}</span></div>
+          <div class="name"><span>{{ label_name.Morphology }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.morphology] }}</span></div>
         </div>
         <div class="info" style="border: none;"> <!-- Quailty  -->
-          <div class="name"><span>Quailty</span></div>
-          <div class="text"><span>{{ dataset.quality }}</span></div>
+          <div class="name"><span>{{ label_name.Quailty }}</span></div>
+          <div class="text"><span>{{ dataset[CSV_title_names.quality] }}</span></div>
         </div>
       </div>
     </div>
@@ -70,10 +70,16 @@ import axios from 'axios';
 import icon_svg from '../assets/images/svg_download.png';
 import icon_png from '../assets/images/png_download.png';
 import icon_like from '../assets/images/icon_like_empty.png';
+import { GetLabelName_CN, GetCSVTitleName_CN } from '../common/labels_cn';
+import { GetLabelName_EN, GetCSVTitleName_EN } from '../common/labels_en';
 
 export default {
   name: 'Details',
   props: {
+    language:{
+      type:String,
+      default: "Chinese"
+    },
     dataset:{
       type: Object,
       default: {
@@ -113,13 +119,28 @@ export default {
       image_path: null,
       icon_like: icon_like,
       icon_svg: icon_svg,
-      icon_png: icon_png
+      icon_png: icon_png,
+      label_name: [],
+      CSV_title_names: {},
     }
   },
   created(){
     this.getImage();
+    this.language_change();
   },
   methods:{
+    language_change(){
+      if(this.language=="English"){
+        this.label_name = GetLabelName_EN();
+        this.CSV_title_names = GetCSVTitleName_EN();
+      }
+      else if(this.language=="Chinese"){
+        this.label_name = GetLabelName_CN();
+        this.CSV_title_names = GetCSVTitleName_CN();
+      }
+      // console.log(this.CSV_title_names.name);
+      // console.log(this.dataset[this.CSV_title_names.name]);
+    },
     async getImage(){
       try {
           // 发送GET请求到Flask后端
@@ -132,6 +153,17 @@ export default {
       } catch (err) {
           console.error('获取图片失败:', err);
       } 
+    }
+  },
+  watch:{
+    dataset:{
+      handler(newVal, oldVal){
+          this.getImage();
+      },
+      deep: true,
+    },
+    language:{
+      handler(){this.language_change();}
     }
   }
 }

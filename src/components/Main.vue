@@ -118,8 +118,8 @@
           v-model="history_items_status[index]" :label="item" font-size="smaller" />
     </div>
   </div>
-  <!-- <div class="mask"></div> -->
-  <!-- <Details class="details"/> -->
+  <div class="mask"></div>
+  <Details class="details" :language="language"/>
 </template>
 
 <script>
@@ -263,7 +263,7 @@ export default {
 
         for(let i=0;i<this.label_name.HistoryItems.length;i++) 
           if(this.history_items_status[i])times.push(this.label_name.HistoryItems[i]);
-        console.log(mediums);
+        // console.log(mediums);
         var result = [];
         for(const feature of this.results){
           var flag = true;
@@ -342,8 +342,8 @@ export default {
 .mask{
   position: absolute;
   width: 100vw;
-  height: 100vh;
-  top: 0%;
+  height: 95vh;
+  top: 5vh;
   left: 0%;
   background-color: #00000040;
   z-index: 3;

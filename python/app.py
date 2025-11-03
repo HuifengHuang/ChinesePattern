@@ -7,8 +7,8 @@ app = Flask(__name__)
 CORS(app)
 
 # 存储图片的目录
-# UPLOAD_FOLDER = 'D:\RA工作目录\code workspace\ChinesePattern\python'
-UPLOAD_FOLDER = 'E:\kangziyao\CodingSapce\ChinesePattern\python'
+UPLOAD_FOLDER = 'D:\RA工作目录\code workspace\ChinesePattern\python'
+# UPLOAD_FOLDER = 'E:\kangziyao\CodingSapce\ChinesePattern\python'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 

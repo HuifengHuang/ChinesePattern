@@ -105,7 +105,7 @@ export default {
         'color': '#8B8B8B',
         'margin-left': '5px'
       },
-      CSV_title_names: [],
+      CSV_title_names: {},
     }
   },
   created(){
@@ -131,17 +131,17 @@ export default {
       } 
     }
   },
-    watch:{
-      dataset:{
-        handler(newVal, oldVal){
-            this.getImage();
-        },
-        deep: true,
+  watch:{
+    dataset:{
+      handler(newVal, oldVal){
+          this.getImage();
       },
-      language:{
-        handler(){this.language_change();}
-      }
+      deep: true,
+    },
+    language:{
+      handler(){this.language_change();}
     }
+  }
 }
 </script>
 
