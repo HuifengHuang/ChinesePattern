@@ -33,7 +33,7 @@
         </div>
         <div class="info"  style="flex-grow: 1;">  <!-- Description  -->
           <div class="name"><span>{{ label_name.Description }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.description] }}</span></div>
+          <div class="text overflow" style="align-items: flex-start;"><span>{{ dataset[CSV_title_names.description] }}</span></div>
         </div>
         <div class="info">  <!-- Subject  -->
           <div class="name"><span>{{ label_name.Subject }}</span></div>
@@ -41,7 +41,7 @@
         </div>
         <div class="info" style="flex-grow: 1;">  <!-- Connotation  -->
           <div class="name"><span>{{ label_name.Connotation }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.subject_lv3] }}</span></div>
+          <div class="text overflow" style="align-items: flex-start;"><span>{{ dataset[CSV_title_names.subject_lv3] }}</span></div>
         </div>
         <div class="group"><span>{{ label_name.Visual_Format }}</span></div>
         <div class="info">  <!-- Stucture  -->
@@ -259,5 +259,8 @@ div{
   width: 75%;
   padding: 0 2%;
   font-weight: 500;
+}
+.overflow{
+  overflow: auto;
 }
 </style>

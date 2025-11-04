@@ -7,7 +7,7 @@
           <span style="font-size: 3vh;">{{ label_name.SystemName }}</span>
         </div>
         <div class="search-box">
-          <el-input class="no-border-input" v-model="input_value" style="width: 35vw" :placeholder=label_name.InputHolder />
+          <el-input class="no-border-input" v-model="input_value" style="width: 35vw" :placeholder=label_name.InputHolder  v-on:keyup.enter="search()"/>
           <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;cursor: pointer;" fit="fill" v-on:click="search()"/>
         </div>
         <div class="Personalization">
@@ -92,8 +92,8 @@
       </div>
 
       <div class="viewer">  <!-- 右侧主视图模块 -->
-        <Card :size="cardSize" v-for="value in filtered_data" :dataset="value" :language=language
-            style="margin: 0.5vw 0.5vw;"/>
+        <Card :size="cardSize" v-for="value in filtered_data" :dataset="value" :language=language v-on:click="set_detail(value)"
+            style="margin: 0.5vw 0.5vw;cursor: pointer;"/>
       </div>
     </div>
 
@@ -102,7 +102,9 @@
       <div class="History_period">
         <div class="selector">
           <span>{{ label_name.HistoryName }}</span>
-          <img :src="icon_arrow_up" style="object-fit: contain;"  v-on:click="showHistorySelector"/>
+          <div class="icon_arrow">
+            <img :src="icon_arrow" v-on:click="showHistorySelector"/>
+          </div>
         </div>
         <div class="labels">
           <el-checkbox v-for="(item, index) in label_name.HistoryItems" v-show="history_items_status[index]"
@@ -118,8 +120,18 @@
           v-model="history_items_status[index]" :label="item" font-size="smaller" />
     </div>
   </div>
-  <div class="mask"></div>
-  <Details class="details" :language="language"/>
+
+  <!-- 遮罩层 -->
+  <div class="mask" v-show="is_detail_show"></div>
+
+  <!-- Details 详细栏 -->
+  <div class="details" v-if="is_detail_show">
+    <Details style="width: 100%;height: 100%;" :language="language" :dataset="detail_value"/>
+    <div class="button" v-on:click="close_detail()">
+      <img :src="icon_close" style="width: 100%;height: 100%;object-fit: fill;"></img>
+    </div>
+  </div>
+  
 </template>
 
 <script>
@@ -137,6 +149,8 @@ import icon_search from '../assets/images/search.png';
 import icon_like from '../assets/images/icon_like.png';
 import icon_trans from '../assets/images/icon_trans.png';
 import icon_arrow_up from '../assets/images/arrow_up.png';
+import icon_arrow_down from '../assets/images/arrow_down.png'
+import icon_close from '../assets/images/close.png'
 
 import axios from 'axios';
 import { GetLabelName_CN, GetCSVTitleName_CN } from '../common/labels_cn';
@@ -160,6 +174,9 @@ export default {
         icon_like: icon_like,
         icon_trans: icon_trans,
         icon_arrow_up: icon_arrow_up,
+        icon_arrow_down: icon_arrow_down,
+        icon_arrow: icon_arrow_up,
+        icon_close: icon_close,
         input_value: '',
 
         piechartSize: 5.5 * window.innerWidth / 100,
@@ -186,6 +203,8 @@ export default {
         language: "English",
         label_name: [],
         csv_title_names: [],
+        is_detail_show: false,
+        detail_value: null,
 
         medium_items_status: [false,false,false,false,false,false],
         subject_items_status: [false,false,false,false],
@@ -194,24 +213,6 @@ export default {
         style_items_status: [false,false],
         history_items_status: [false,false,false,false,false,false,false,false,false,false,false,false],
 
-        /**     filtered_data 示例
-          {           
-            "name": "long",
-            "symbols": {
-              "first_symbol": "",
-              "other_symbol": []
-            },
-            "mediums": {
-              "first_medium": "",
-              "other_medium": []
-            },
-            "times": {
-              "first_time": "",
-              "other_time": []
-            },
-            "image": null
-          }
-        */
         filtered_data:[],
         results:[],
       };
@@ -225,21 +226,13 @@ export default {
     methods:{
       showHistorySelector(){
         this.history_selector_show = (this.history_selector_show)?false:true;
+        this.icon_arrow = (this.history_selector_show)?this.icon_arrow_down:this.icon_arrow_up;
       },
       async getAllCards(){
         const response = await axios.get(this.$BackendUrl + '/all_cards');
         this.results = response.data;
         this.filter();
       },
-      // async loadImage(){
-      //   try {
-      //     // 假设后端返回图片列表
-      //     const response = await axios.get('http://localhost:5000/api/images');
-      //     this.results = response.data;
-      //   } catch (error) {
-      //     console.error('加载图片列表失败:', error);
-      //   }
-      // },
       async search(){
         axios.post(this.$BackendUrl + '/search', {
           "key_word": this.input_value,
@@ -249,8 +242,15 @@ export default {
           // console.log(this.results[0]);
         });
       },
+      set_detail(value){
+        this.detail_value = value;
+        this.is_detail_show = true;
+      },
+      close_detail(){
+        this.is_detail_show = false;
+      },
       filter(){           // 过滤器
-        const mediums = [], subjects = [], symbols = [], times = [];
+        const mediums = [], subjects = [], symbols = [], times = [], structures = [], styles = [];
         
         for(let i=0;i<this.label_name.MediumItems.length;i++) 
           if(this.medium_items_status[i])mediums.push(this.label_name.MediumItems[i]);
@@ -261,6 +261,12 @@ export default {
         for(let i=0;i<this.label_name.SymbolsItems.length;i++) 
           if(this.symbols_items_status[i])symbols.push(this.label_name.SymbolsItems[i]);
 
+        for(let i=0;i<this.label_name.StructureItems.length;i++) 
+          if(this.struture_items_status[i])structures.push(this.label_name.StructureItems[i]);
+
+        for(let i=0;i<this.label_name.StyleItems.length;i++) 
+          if(this.style_items_status[i])styles.push(this.label_name.StyleItems[i]);
+
         for(let i=0;i<this.label_name.HistoryItems.length;i++) 
           if(this.history_items_status[i])times.push(this.label_name.HistoryItems[i]);
         // console.log(mediums);
@@ -270,6 +276,8 @@ export default {
           if(mediums.length != 0)flag = flag && mediums.includes(feature[this.csv_title_names.medium_lv1]);
           if(subjects.length != 0)flag = flag && subjects.includes(feature[this.csv_title_names.subject_lv1]);
           if(symbols.length != 0)flag = flag && symbols.includes(feature[this.csv_title_names.symbol_lv1]);
+          if(structures.length != 0)flag = flag && structures.includes(feature[this.csv_title_names.structure]);
+          if(styles.length != 0)flag = flag && styles.includes(feature[this.csv_title_names.style]);
           if(times.length != 0)flag = flag && times.includes(feature[this.csv_title_names.time_lv1]);
           if(flag){
             result.push(feature);
@@ -292,7 +300,7 @@ export default {
         }
       }
     },
-    watch:{
+    watch: {
       medium_items_status:{
         handler(newVal, oldVal){
           this.filter();
@@ -312,6 +320,18 @@ export default {
         deep: true,
       },
       history_items_status:{
+        handler(newVal, oldVal){
+          this.filter();
+        },
+        deep: true,
+      },
+      struture_items_status:{
+        handler(newVal, oldVal){
+          this.filter();
+        },
+        deep: true,
+      },
+      style_items_status:{
         handler(newVal, oldVal){
           this.filter();
         },
@@ -347,6 +367,15 @@ export default {
   left: 0%;
   background-color: #00000040;
   z-index: 3;
+}
+.button{
+  position: relative;
+  width: 2.1vw;
+  height: 2vw;
+  top: -0.8vw;
+  left: -1.2vw;
+  z-index: 3;
+  cursor: pointer;
 }
 </style>
 

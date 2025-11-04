@@ -6,8 +6,9 @@
         <el-checkbox class="panel_checkbox" v-for="(label, index) in item_labels"
             v-model="item_status[index]" :label=label size="large" v-show="item_status[index]"/>
       </div>
-      
-      <el-image :src="icon_arrow_up" :style="image_style" fit="fill" v-on:click="handleClick"/>
+      <div class="btn" v-on:click="handleClick">
+        <img class="img" :src="icon_arrow" :style="image_style"/>
+      </div>
     </div>
     <div class="options" v-if="isActive">
       <el-checkbox v-for="(label, index) in item_labels"
@@ -18,6 +19,7 @@
 
 <script>
 import icon_arrow_up from '../assets/images/arrow_up.png';
+import icon_arrow_down from '../assets/images/arrow_down.png';
 
 export default {
   name: 'MutipleSelector',
@@ -51,12 +53,13 @@ export default {
   data() {
     return {
       icon_arrow_up: icon_arrow_up,
+      icon_arrow_down: icon_arrow_down,
+      icon_arrow: icon_arrow_up,
       isActive: true,
       selector_style: null,
       title_style: null,
       image_style:{
-        width: 0.1 * this.size  + 'px',
-        height: 0.05 * this.size + 'px'
+        width: 0.06 * this.size  + 'px',
       },
     }
   },
@@ -80,6 +83,7 @@ export default {
         width: this.size + 'px',
         "border": (this.isActive)?"1px solid rgba(185, 185, 185, 1)":"none"
       }
+      this.icon_arrow = (this.isActive)?this.icon_arrow_up:this.icon_arrow_down;
       this.title_style = {
         "backgound-color": (this.isActive)?"#5F9DDA40":"none"
       }
@@ -113,6 +117,7 @@ export default {
   background-color: #5F9DDA40;
 }
 .panel{
+  width: 90%;
   display: flex;
   flex-wrap: wrap;
 }
@@ -130,5 +135,16 @@ export default {
   flex-direction: column;
   background-color: #F3F3F3;
   border-top: 1px solid rgba(185, 185, 185, 1);
+}
+.btn{
+  display: flex;
+  width: 10%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.img{
+  aspect-ratio: 2;
 }
 </style>

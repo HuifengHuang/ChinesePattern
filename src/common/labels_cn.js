@@ -8,7 +8,7 @@ export function GetLabelName_CN(){
         SubjectName: "主题",
         SubjectItems: ["吉祥", "叙事", "身份", "思想"],
         SymbolsName: "意象",
-        SymbolsItems: ["生物", "自然", "人与人造物", "其他"],
+        SymbolsItems: ["动物", "自然", "人与人造物", "其他"],
         VisualFormat: "视觉形式",
         StructureName: "结构",
         StructureItems: ["单体", "重复", "平铺", "场景性结合", "装饰性结合"],

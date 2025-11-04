@@ -236,11 +236,15 @@ div{
   font-style: normal;
   line-height: normal;
   letter-spacing: -0.24px;
-  margin: 0 5px;
+  margin-left: 5px;
   padding: 0 5px;
   box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid #8B8B8B;
+  /* max-width: 100px; */
+  white-space: nowrap;    /* 禁止换行 */
+  overflow: hidden;       /* 隐藏溢出内容 */
+  text-overflow: ellipsis; /* 显示省略号 */
 }
 </style>
 
