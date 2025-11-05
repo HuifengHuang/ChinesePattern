@@ -12,7 +12,7 @@
         </div>
         <div class="Personalization">
           <el-image :src="icon_like" style="width: 2.5vw;height: 2.5vh;" fit="fill"/>
-          <el-image :src="icon_trans" style="width: 2.5vw;height: 2.5vh;" fit="fill" v-on:click="switch_language()"/>
+          <el-image :src="icon_trans" style="width: 2.5vw;height: 2.5vh;cursor: pointer;" fit="fill" v-on:click="switch_language()"/>
         </div>
     </div>
 
