@@ -356,8 +356,8 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  width: 50vw;
-  height: 60vh;
+  width: 60vw;
+  height: 70vh;
 }
 .mask{
   position: absolute;

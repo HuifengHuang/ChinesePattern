@@ -16,28 +16,44 @@
         <div class="group"><span>{{ label_name.Information }}</span></div>
         <div class="info">  <!-- Time  -->
           <div class="name"><span>{{ label_name.Time }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.time_lv1] }}</span></div>
+          <div class="text">
+            <span>{{ dataset[CSV_title_names.time_lv1] }}</span>
+            <span>{{ dataset[CSV_title_names.time_lv2] }}</span>
+          </div>
         </div>
         <div class="info">  <!-- Location  -->
           <div class="name"><span>{{ label_name.Location }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.location] }}</span></div>
+          <div class="text">
+            <span>{{ dataset[CSV_title_names.location] }}</span>
+          </div>
         </div>
-        <div class="info">  <!-- Medium  -->
+        <div class="info" style="height: fit-content; ">  <!-- Medium  -->
           <div class="name"><span>{{ label_name.Medium }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.medium_lv1] }}</span></div>
+          <div class="text" style="flex-wrap: wrap;">
+            <span>{{ dataset[CSV_title_names.medium_lv1] }}</span>
+            <span>{{ dataset[CSV_title_names.medium_lv2] }}</span>
+            <span>{{ dataset[CSV_title_names.medium_lv3] }}</span>
+          </div>
         </div>
         <div class="group"><span>{{ label_name.Content }}</span></div>
-        <div class="info">  <!-- Symbols  -->
+        <div class="info" style="height: fit-content;">  <!-- Symbols  -->
           <div class="name"><span>{{ label_name.Symbols }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.symbol_lv1] }}</span></div>
+          <div class="text" style="flex-wrap: wrap;">
+            <span>{{ dataset[CSV_title_names.symbol_lv1] }}</span>
+            <span>{{ dataset[CSV_title_names.symbol_lv2] }}</span>
+            <span>{{ dataset[CSV_title_names.symbol_lv3] }}</span>
+          </div>
         </div>
         <div class="info"  style="flex-grow: 1;">  <!-- Description  -->
           <div class="name"><span>{{ label_name.Description }}</span></div>
           <div class="text overflow" style="align-items: flex-start;"><span>{{ dataset[CSV_title_names.description] }}</span></div>
         </div>
-        <div class="info">  <!-- Subject  -->
+        <div class="info" style="height: fit-content;">  <!-- Subject  -->
           <div class="name"><span>{{ label_name.Subject }}</span></div>
-          <div class="text"><span>{{ dataset[CSV_title_names.subject_lv1] }}</span></div>
+          <div class="text" style="flex-wrap: wrap;">
+            <span>{{ dataset[CSV_title_names.subject_lv1] }}</span>
+            <span>{{ dataset[CSV_title_names.subject_lv2] }}</span>
+          </div>
         </div>
         <div class="info" style="flex-grow: 1;">  <!-- Connotation  -->
           <div class="name"><span>{{ label_name.Connotation }}</span></div>
@@ -175,8 +191,8 @@ div{
 }
 
 .container {
-  width: 50vw;
-  height: 60vh;
+  /* width: 50vw;
+  height: 60vh; */
   /* position: absolute;
   top: 50%;
   left: 50%;
@@ -227,7 +243,7 @@ div{
   flex-direction: column;
 }
 .body .info_container .group{
-  height: 7%;
+  height: 5%;
   width: auto;
   justify-content: center;
   align-items: center;
@@ -237,7 +253,7 @@ div{
   border-bottom: 1px solid #8B8B8B;
 }
 .body .info_container .info{
-  height: 5%;
+  height: 4%;
   width: auto;
   justify-content: center;
   align-items: center;
@@ -259,6 +275,10 @@ div{
   width: 75%;
   padding: 0 2%;
   font-weight: 500;
+}
+.body .info_container .info .text span{
+  padding: 2px 0;
+  margin-right: 8px;
 }
 .overflow{
   overflow: auto;

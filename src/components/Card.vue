@@ -6,29 +6,30 @@
         <img :src="image_path" style="object-fit: fill;"></img>
       </div>
       <div class="symbol">
-        <span class="symbol_span" :style="text_size">{{ dataset[CSV_title_names.symbol_lv1] }}</span>
-        <span class="symbol_span" :style="text_size">{{ dataset[CSV_title_names.symbol_lv2] }}</span>
+        <span class="symbol_span" :style="text_size" v-for="item in symbol_lv1">{{ item }}</span>
+        <span class="symbol_span" :style="text_size" v-for="item in symbol_lv2">{{ item }}</span>
       </div>
     </div>
+
     <div class="desc">
       <div class="info">
         <div class="time">
-          <span :style="text_size">{{ dataset[CSV_title_names.time_lv1] }}</span>
-          <span :style="second_size">{{ dataset[CSV_title_names.time_lv2] }}</span>
+          <span :style="text_size" v-if="time_lv1" v-for="item in time_lv1">{{ item }}</span>
+          <span :style="second_size" v-if="time_lv2" v-for="item in time_lv2">{{ item }}</span>
         </div>
         <div class="medium">
-          <span :style="text_size">{{ dataset[CSV_title_names.medium_lv1] }}</span>
-          <span :style="second_size">{{ dataset[CSV_title_names.medium_lv2] }}</span>
-          <span :style="second_size">{{ dataset[CSV_title_names.medium_lv3] }}</span>
+          <span :style="text_size" v-if="medium_lv1" v-for="item in medium_lv1">{{ item }}</span>
+          <span :style="second_size" v-if="medium_lv2" v-for="item in medium_lv2">{{ item }}</span>
+          <span :style="second_size" v-if="medium_lv3" v-for="item in medium_lv3">{{ item }}</span>
         </div>
       </div>
       <div class="subject">
         <div class="btn">
-          <span class="span" :style="text_size">{{ dataset[CSV_title_names.subject_lv1] }}</span>
-          <span class="span" :style="text_size">{{ dataset[CSV_title_names.subject_lv2] }}</span>
+          <span class="span" :style="text_size" v-if="subject_lv1" v-for="item in subject_lv1">{{ item }}</span>
+          <span class="span" :style="text_size" v-if="subject_lv2" v-for="item in subject_lv2">{{ item }}</span>
         </div>
         <div class="icon">
-
+          <img :src="icon_like" style="object-fit: contain;"></img>
         </div>
       </div>
     </div>
@@ -37,6 +38,7 @@
 
 <script> 
 import dragon_image from '../assets/images/test/龙_001 (1).png';
+import icon_like from '../assets/images/icon_like_empty.png'
 import axios from 'axios';
 import { GetCSVTitleName_CN } from '../common/labels_cn';
 import { GetCSVTitleName_EN } from '../common/labels_en';
@@ -105,14 +107,37 @@ export default {
         'color': '#8B8B8B',
         'margin-left': '5px'
       },
+      icon_like: icon_like,
       CSV_title_names: {},
+      symbol_lv1: null,
+      symbol_lv2: null,
+      time_lv1: null,
+      time_lv2: null,
+      medium_lv1: null,
+      medium_lv2: null,
+      medium_lv3: null,
+      subject_lv1: null,
+      subject_lv2: null,
     }
   },
   created(){
     this.getImage();
     this.language_change();
+    this.load_data();
   },
   methods:{
+    load_data(){
+      let split_word = /[,，、]/
+      this.symbol_lv1 = (this.dataset[this.CSV_title_names.symbol_lv1])?this.dataset[this.CSV_title_names.symbol_lv1].split(split_word):null;
+      this.symbol_lv2 = (this.dataset[this.CSV_title_names.symbol_lv2])?this.dataset[this.CSV_title_names.symbol_lv2].split(split_word):null;
+      this.time_lv1 = (this.dataset[this.CSV_title_names.time_lv1])?this.dataset[this.CSV_title_names.time_lv1].split(split_word):null;
+      this.time_lv2 = (this.dataset[this.CSV_title_names.time_lv2])?this.dataset[this.CSV_title_names.time_lv2].split(split_word):null;
+      this.medium_lv1 = (this.dataset[this.CSV_title_names.medium_lv1])?this.dataset[this.CSV_title_names.medium_lv1].split(split_word):null;
+      this.medium_lv2 = (this.dataset[this.CSV_title_names.medium_lv2])?this.dataset[this.CSV_title_names.medium_lv2].split(split_word):null;
+      this.medium_lv3 = (this.dataset[this.CSV_title_names.medium_lv3])?this.dataset[this.CSV_title_names.medium_lv3].split(split_word):null;
+      this.subject_lv1 = (this.dataset[this.CSV_title_names.subject_lv1])?this.dataset[this.CSV_title_names.subject_lv1].split(split_word):null;
+      this.subject_lv2 = (this.dataset[this.CSV_title_names.subject_lv2])?this.dataset[this.CSV_title_names.subject_lv2].split(split_word):null;
+    },
     language_change(){
       if(this.language=="English")this.CSV_title_names = GetCSVTitleName_EN();
       else if(this.language=="Chinese")this.CSV_title_names = GetCSVTitleName_CN();
@@ -139,7 +164,7 @@ export default {
       deep: true,
     },
     language:{
-      handler(){this.language_change();}
+      handler(){this.language_change();this.load_data();}
     }
   }
 }
@@ -163,6 +188,7 @@ div{
   flex-direction: column;
   box-sizing: border-box;
   border-bottom: 1px solid #8B8B8B;
+  justify-content: space-between;
 }
 .img .name{
   width: auto;
@@ -171,8 +197,9 @@ div{
   padding-left: 5px;
 }
 .img .image{
-  width: 100% ;
   height: 80%;
+  aspect-ratio: 1;
+  position: relative;
   justify-content: center;
 }
 .img .image img{
@@ -183,7 +210,8 @@ div{
   height: 10%;
   width: auto;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  overflow: hidden;       /* 隐藏溢出内容 */
 }
 .img .symbol .symbol_span{
   color: #000;
@@ -191,11 +219,12 @@ div{
   font-style: normal;
   line-height: normal;
   letter-spacing: -0.24px;
-  margin: 0 5px;
+  margin-left: 5px;
   padding: 0 5px;
   box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid #8B8B8B;
+
 }
 .desc{
   width: 100%;
@@ -203,7 +232,7 @@ div{
   flex-direction: column;
 }
 .desc .info{
-  height: 60%;
+  height: 65%;
   width: 100%;
   flex-direction: column;
 }
@@ -220,15 +249,27 @@ div{
   flex-wrap: wrap;
 }
 .desc .subject{
-  height: 40%;
+  height: 35%;
   width: 100%;
   justify-content: space-between;
 }
 .desc .subject .btn{
+  width: 80%;
   height: auto;
-  /* width: 50%; */
+
   align-items: end;
   padding-bottom: 5px;
+  overflow: hidden;       /* 隐藏溢出内容 */
+}
+.desc .subject .icon{
+  width: 20%;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+.desc .subject .icon img{
+  width: 50%;
+  height: auto;
 }
 .desc .subject .btn .span{
   color: #000;
@@ -243,7 +284,7 @@ div{
   border: 1px solid #8B8B8B;
   /* max-width: 100px; */
   white-space: nowrap;    /* 禁止换行 */
-  overflow: hidden;       /* 隐藏溢出内容 */
+  /* overflow: hidden;       隐藏溢出内容 */
   text-overflow: ellipsis; /* 显示省略号 */
 }
 </style>
