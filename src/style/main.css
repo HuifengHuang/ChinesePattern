@@ -31,7 +31,7 @@ div {
   border-radius: 60px;
   border: 1px solid #8B8B8B;
   background-color: #F0F0F0;
-  padding: 0 0.5vw;
+  padding: 0 0 0 0.5vw;
 }
 .Header .Personalization{
   width: 15vw;

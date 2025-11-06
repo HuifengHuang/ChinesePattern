@@ -55,7 +55,7 @@ def all_cards():
     with open(UPLOAD_FOLDER + '\Chinese Pattern.csv', 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            if row['fileName_cn'] is not "":
+            if row['fileName'] is not "":
                 results.append(row)
     print(results)
     return jsonify(results)

@@ -160,7 +160,7 @@ export default {
     async getImage(){
       try {
           // 发送GET请求到Flask后端
-          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.fileName_cn, {
+          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.fileName, {
               responseType: 'blob' // 重要：指定响应类型为blob
           });
           // 将响应数据转换为可显示的URL

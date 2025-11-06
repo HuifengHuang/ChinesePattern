@@ -3,7 +3,7 @@
     <div class="img">
       <div class="name"><span :style="name_size">{{ dataset[CSV_title_names.name] }}</span></div>
       <div class="image">
-        <img :src="image_path" style="object-fit: fill;"></img>
+        <img :src="image_path" style="object-fit: contain;"></img>
       </div>
       <div class="symbol">
         <span class="symbol_span" :style="text_size" v-for="item in symbol_lv1">{{ item }}</span>
@@ -145,7 +145,7 @@ export default {
     async getImage(){
       try {
           // 发送GET请求到Flask后端
-          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.fileName_cn, {
+          const response = await axios.get(this.$BackendUrl + '/images/' + this.dataset.fileName, {
               responseType: 'blob' // 重要：指定响应类型为blob
           });
           // 将响应数据转换为可显示的URL
@@ -176,8 +176,9 @@ div{
 }
 
 .container{
+  padding: 2.5px;
   box-sizing: border-box;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #8B8B8B;
   background: #FFF;
   flex-direction: column;
@@ -192,11 +193,17 @@ div{
 }
 .img .name{
   width: auto;
-  height: 10%;
-  align-items: center;
+  height: 20%;
+  /* align-items: center; */
   padding-left: 5px;
+  z-index: 2;
+  background: linear-gradient(to bottom, #fff, transparent);
+}
+.img .name{
+  font-weight: bold;
 }
 .img .image{
+  margin-top: -20%;
   height: 80%;
   aspect-ratio: 1;
   position: relative;
@@ -245,7 +252,7 @@ div{
 .desc .info .medium{
   height: 50%;
   width: 100%;
-  align-items: end;
+  align-items: center;
   flex-wrap: wrap;
 }
 .desc .subject{

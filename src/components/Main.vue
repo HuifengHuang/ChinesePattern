@@ -8,7 +8,7 @@
         </div>
         <div class="search-box">
           <el-input class="no-border-input" v-model="input_value" style="width: 35vw" :placeholder=label_name.InputHolder  v-on:keyup.enter="search()"/>
-          <el-image :src="icon_search" style="width: 1.8vw;height: 1.8vh;cursor: pointer;" fit="fill" v-on:click="search()"/>
+          <el-image :src="icon_search" style="width: 2vw;height: 2vh;cursor: pointer;" fit="fill" v-on:click="search()"/>
         </div>
         <div class="Personalization">
           <el-image :src="icon_like" style="width: 2.5vw;height: 2.5vh;" fit="fill"/>
@@ -234,6 +234,7 @@ export default {
         this.filter();
       },
       async search(){
+        if(this.input_value.length==0)return;
         axios.post(this.$BackendUrl + '/search', {
           "key_word": this.input_value,
         }).then(response => {
