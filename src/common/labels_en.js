@@ -16,7 +16,7 @@ export function GetLabelName_EN(){
         StyleItems: ["Realistic", "Abstract"],
         MorphologyName: "Morphology",
         HistoryName: "History period",
-        HistoryItems: ["Stone Age", "Shang", "West Zhou", "Spring and Autumn & Warring States", "Qin", "Han", "Two Jins", "North-South", "Tang", "Song", "Yuan", "Ming", "Qing"],
+        HistoryItems: ["Stone Age", "Shang", "West Zhou", "Spring and Autumn", "Warring States", "Qin", "Han", "Two Jins", "North-South", "Tang", "Song", "Yuan", "Ming", "Qing"],
         // 以下是详细页中的标签
         Information: "Information",
         Time: "Time",

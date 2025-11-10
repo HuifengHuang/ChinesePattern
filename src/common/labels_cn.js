@@ -16,7 +16,7 @@ export function GetLabelName_CN(){
         StyleItems: ["写实", "抽象"],
         MorphologyName: "形态",
         HistoryName: "历史时期",
-        HistoryItems: ["石器时代", "商代", "西周", "春秋", "秦代", "汉", "魏晋", "南北朝", "唐代", "宋代", "元代", "明代", "清代"],
+        HistoryItems: ["石器时代", "商代", "西周", "春秋", "战国" , "秦代", "汉", "魏晋", "南北朝", "唐代", "宋代", "元代", "明代", "清代"],
         // 以下是详细页中的标签
         Information: "基本信息",
         Time: "时期",

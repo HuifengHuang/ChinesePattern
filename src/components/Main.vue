@@ -102,8 +102,8 @@
       <div class="History_period">
         <div class="selector">
           <span>{{ label_name.HistoryName }}</span>
-          <div class="icon_arrow">
-            <img :src="icon_arrow" v-on:click="showHistorySelector"/>
+          <div class="icon_arrow" v-on:click="showHistorySelector">
+            <img :src="icon_arrow"/>
           </div>
         </div>
         <div class="labels">
@@ -211,7 +211,7 @@ export default {
         symbols_items_status: [false,false,false,false],
         struture_items_status: [false,false,false,false,false],
         style_items_status: [false,false],
-        history_items_status: [false,false,false,false,false,false,false,false,false,false,false,false],
+        history_items_status: [false,false,false,false,false,false,false,false,false,false,false,false,false],
 
         filtered_data:[],
         results:[],

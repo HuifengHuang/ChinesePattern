@@ -6,16 +6,18 @@ import MutipleSelector from './components/MutipleSelector.vue';
 import RadialBarChart from './components/RadialBarChart.vue';
 import Card from './components/Card.vue';
 import Details from './components/Details.vue';
+import TimeBarChart from './components/TimeBarChart.vue';
 </script>
 
 <template>
-  <Main />
+  <!-- <Main /> -->
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
   <!-- <RadialBarChart /> -->
   <!-- <Card /> -->
   <!-- <Details /> -->
+  <TimeBarChart />
 </template>
 
 <style scoped>
