@@ -4,7 +4,6 @@
 
 <script>
 import * as d3 from 'd3';
-import { calcColumnStyle } from 'element-plus/es/components/table-v2/src/composables/utils.mjs';
 
 export default {
   name: 'TimeBarChart',
@@ -14,9 +13,22 @@ export default {
       default: [1800, 120]
     },
     dataset: {
-      type: Object,
+      type: Array,
       default: [
-        {name_cn:""},
+        {value:341, start:-2270,  end:-2070,    status:false},
+        {value:321, start:-1600,  end:-1046,    status:false},
+        {value:467, start:-1046,  end:-771,     status:false},
+        {value:350, start:-771,   end:-476,     status:true},
+        {value:466, start:-476,   end:-221,     status:true},
+        {value:231, start:-221,   end:-206,     status:false},
+        {value:501, start:-202,   end:220,      status:false},
+        {value:221, start:220,    end:420,      status:false},
+        {value:121, start:420,    end:589,      status:false},
+        {value:654, start:589,    end:960,      status:false},
+        {value:432, start:960,    end:1279,     status:false},
+        {value:321, start:1279,   end:1368,     status:false},
+        {value:400, start:1368,   end:1644,     status:false},
+        {value:300, start:1644,   end:1912,     status:false},
       ]
     }
   },
@@ -76,9 +88,51 @@ export default {
       var xScale = d3.scaleLinear()
         .domain(this.total_span)
         .range([0, width]);
+      
+      var xSpanScale = d3.scaleLinear()
+        .domain([0, this.total_span[1]-this.total_span[0]])
+        .range([0, width]);
 
-      console.log(this.span_bar);
+      var yScale = d3.scaleLinear()
+        .domain([0, d3.max(this.dataset, d=>d.value)])
+        .range([0, 60]);
 
+      var ticks = [];
+      for(let i=-2100;i<=1900;i+=100)ticks.push(i);
+      var axis = d3.axisBottom(xScale)
+          .tickValues(ticks)
+          .tickFormat(d3.format(""))
+          .tickSizeOuter(0);
+
+
+
+      this.svg.append("g")
+        .selectAll()
+        .data(this.dataset)
+        .join("rect")
+        .attr("class", "bar")
+        .attr("x", (d)=>xScale(d.start))
+        .attr("y", (d)=>60-yScale(d.value))
+        .attr("width", (d)=>xSpanScale(d.end - d.start))
+        .attr("height", (d)=>yScale(d.value))
+        .style("fill", (d)=>{
+          if(d.status)return "#FAC63280";
+          else return "#8BB1FF80";
+        })
+        .style("stroke", (d)=>{
+          if(d.status)return "#FAC632";
+          else return "#8BB1FF";
+        })
+        .style("stroke-width", 1);
+
+      // 添加刻度尺
+      this.svg.append("g")
+        .attr("transform", `translate(0, 60)`)
+        .call(axis);
+
+      // console.log(this.span_bar);
+
+      //  添加朝代分割线
       this.svg.append("g")
         .attr("fill", "black")
         .selectAll()
@@ -89,6 +143,7 @@ export default {
         .attr("width", 1)
         .attr("height", 20);
       
+      //  添加朝代文字
       this.svg.append("g")
         .selectAll()
         .data(this.period_span)
