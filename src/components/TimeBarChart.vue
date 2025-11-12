@@ -67,6 +67,7 @@ export default {
   },
   mounted() {
     this.initChart();
+    this.bars_refresh();
     // this.text_show();
   },
   methods: {
@@ -88,14 +89,6 @@ export default {
       var xScale = d3.scaleLinear()
         .domain(this.total_span)
         .range([0, width]);
-      
-      var xSpanScale = d3.scaleLinear()
-        .domain([0, this.total_span[1]-this.total_span[0]])
-        .range([0, width]);
-
-      var yScale = d3.scaleLinear()
-        .domain([0, d3.max(this.dataset, d=>d.value)])
-        .range([0, 60]);
 
       var ticks = [];
       for(let i=-2100;i<=1900;i+=100)ticks.push(i);
@@ -104,26 +97,6 @@ export default {
           .tickFormat(d3.format(""))
           .tickSizeOuter(0);
 
-
-
-      this.svg.append("g")
-        .selectAll()
-        .data(this.dataset)
-        .join("rect")
-        .attr("class", "bar")
-        .attr("x", (d)=>xScale(d.start))
-        .attr("y", (d)=>60-yScale(d.value))
-        .attr("width", (d)=>xSpanScale(d.end - d.start))
-        .attr("height", (d)=>yScale(d.value))
-        .style("fill", (d)=>{
-          if(d.status)return "#FAC63280";
-          else return "#8BB1FF80";
-        })
-        .style("stroke", (d)=>{
-          if(d.status)return "#FAC632";
-          else return "#8BB1FF";
-        })
-        .style("stroke-width", 1);
 
       // 添加刻度尺
       this.svg.append("g")
@@ -157,10 +130,91 @@ export default {
             if(d.end - d.start < 80)return "8px"
             else return "12px"
         })
-    }
+    },
+    bars_refresh(){
+      d3.select("#g-bar").remove();
+      d3.select("#g-text").remove();
+
+      const width = this.size[0] - 2 * this.padding;
+      const height = this.size[1] - 2 * this.padding;
+      const index = d3.local();
+      const that = this;
+
+      var xScale = d3.scaleLinear()
+        .domain(this.total_span)
+        .range([0, width]);
+      
+      var xSpanScale = d3.scaleLinear()
+        .domain([0, this.total_span[1]-this.total_span[0]])
+        .range([0, width]);
+
+      var yScale = d3.scaleLinear()
+        .domain([0, d3.max(this.dataset, d=>d.value)])
+        .range([0, 60 - 12]);
+
+      // 添加bar
+      this.svg.append("g")
+        .attr("id", "g-bar")
+        .selectAll()
+        .data(this.dataset)
+        .join("rect")
+        .attr("x", (d)=>xScale(d.start))
+        .attr("y", (d)=>60-yScale(d.value))
+        .attr("width", (d)=>xSpanScale(d.end - d.start))
+        .attr("height", (d)=>yScale(d.value))
+        .style("fill", (d)=>{
+          if(d.status)return "#FAC63280";
+          else return "#8BB1FF80";
+        })
+        .style("stroke", (d)=>{
+          if(d.status)return "#FAC632";
+          else return "#8BB1FF";
+        })
+        .style("stroke-width", 1)
+        .each(function(d,i){
+          index.set(this, i);
+        })
+        .on("click", function(event, d){
+          console.log(that.dataset[index.get(this)].status);
+          that.dataset[index.get(this)].status = (d.status)?false:true
+        });
+      
+      // 添加bar文字
+      this.svg.append("g")
+        .attr("id", "g-text")
+        .selectAll()
+        .data(this.dataset)
+        .join("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (d)=>xScale((d.end + d.start) / 2))
+        .attr("y", (d)=>60-yScale(d.value)-5)
+        .attr("dominant-baseline", "middle")  // 垂直居中
+        .text((d)=>d.value)
+        .attr("font-size", 12);
+
+
+      var ticks = [];
+      for(let i=-2100;i<=1900;i+=100)ticks.push(i);
+      var axis = d3.axisBottom(xScale)
+          .tickValues(ticks)
+          .tickFormat(d3.format(""))
+          .tickSizeOuter(0);
+      // 添加刻度尺
+      this.svg.append("g")
+        .attr("transform", `translate(0, 60)`)
+        .call(axis);
+      
+      
+    },
   },
   watch: {
-
+    dataset:{
+      handler(newVal, oldVal){
+        console.log("bars_refresh")
+        this.bars_refresh();
+      },
+      deep: true,
+    },
   }
 };
 </script>
