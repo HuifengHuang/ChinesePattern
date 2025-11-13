@@ -111,7 +111,10 @@
             v-model="history_items_status[index]" :label="item"  />
         </div>
       </div>
-      <div></div>
+      <div class="TimeBarChart">
+        <TimeBarChart style="width: 100%;height: 100%;" :Status="history_items_status"
+           :size="timebarchartSize" :language="language" @update:data="history_items_status = $event"/><!-- @update:data="history_items_status = $event" -->
+      </div>
     </div>
 
     <!-- History Period 展开栏 -->
@@ -142,6 +145,7 @@ import MutipleSelector from './MutipleSelector.vue';
 import RadialBarChart from './RadialBarChart.vue';
 import Card from './Card.vue';
 import Details from './Details.vue';
+import TimeBarChart from './TimeBarChart.vue';
 
 import {ref} from 'vue'
 import icon_mark from '../assets/images/mark.png';
@@ -165,7 +169,8 @@ export default {
     MutipleSelector,
     RadialBarChart,
     Card,
-    Details
+    Details,
+    TimeBarChart
   },
   data() {
       return {
@@ -188,6 +193,7 @@ export default {
         cardSize:[
           (82 - 5) * window.innerWidth / 100 / 6 - 8, (82 - 5) * window.innerWidth / 100 / 6 * 1.5
         ],
+        timebarchartSize: [98 * window.innerWidth / 100, 13 * window.innerHeight / 100],
 
         // legend_list: [
         //   { color: "#FAC632", text: "Utensil & Vessel (1234)"},
@@ -211,7 +217,7 @@ export default {
         symbols_items_status: [false,false,false,false],
         struture_items_status: [false,false,false,false,false],
         style_items_status: [false,false],
-        history_items_status: [false,false,false,false,false,false,false,false,false,false,false,false,false],
+        history_items_status: [false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 
         filtered_data:[],
         results:[],

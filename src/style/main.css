@@ -42,7 +42,7 @@ div {
 
 .Main {
   width: 100%;
-  height: 85vh;
+  height: 80vh;
   flex-direction: row;
   flex-grow: 30;
 }
@@ -129,13 +129,13 @@ div {
 
 .Footer {
   width: 100%;
-  height: 10vh;
+  height: 15vh;
   flex-direction: column;
   box-shadow: 0 -4px 3px 0 rgba(80, 104, 87, 0.25);
   z-index: 1;  /* Header置顶，让阴影置于Main的背景颜色之上 */
 }
 .History_period{
-  height: 35%;
+  height: 25%;
   width: auto;
   align-items: center;
 }
@@ -170,13 +170,18 @@ div {
   padding: 0 0.2vw;
 }
 
+.TimeBarChart{
+  width: 100%;
+  height: 75%;
+}
+
 .history_selector{
   width: 16vw;
   display: flex;
   flex-direction: column;
   position: absolute;
   left: 0.5vw;
-  bottom: 10vh;
+  bottom: 15vh;
   background-color: #F3F3F3;
   box-sizing: border-box;
   border-radius: 5px;

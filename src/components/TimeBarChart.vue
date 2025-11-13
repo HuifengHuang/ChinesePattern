@@ -4,38 +4,45 @@
 
 <script>
 import * as d3 from 'd3';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default {
   name: 'TimeBarChart',
   props: {
+    language:{
+      type:String,
+      default: "Chinese"
+    },
     size: {
       type: Number,
       default: [1800, 120]
     },
-    dataset: {
+    Status: {
       type: Array,
-      default: [
-        {value:341, start:-2270,  end:-2070,    status:false},
-        {value:321, start:-1600,  end:-1046,    status:false},
-        {value:467, start:-1046,  end:-771,     status:false},
-        {value:350, start:-771,   end:-476,     status:true},
-        {value:466, start:-476,   end:-221,     status:true},
-        {value:231, start:-221,   end:-206,     status:false},
-        {value:501, start:-202,   end:220,      status:false},
-        {value:221, start:220,    end:420,      status:false},
-        {value:121, start:420,    end:589,      status:false},
-        {value:654, start:589,    end:960,      status:false},
-        {value:432, start:960,    end:1279,     status:false},
-        {value:321, start:1279,   end:1368,     status:false},
-        {value:400, start:1368,   end:1644,     status:false},
-        {value:300, start:1644,   end:1912,     status:false},
-      ]
+      require: true,
+      default: []
     }
   },
   data() {
     return {
       svg: null,
       padding: 10,
+      raw_data: [
+        {value:341, start:-2270,  end:-2070, },
+        {value:321, start:-1600,  end:-1046, },
+        {value:467, start:-1046,  end:-771,  },
+        {value:350, start:-771,   end:-476,  },
+        {value:466, start:-476,   end:-221,  },
+        {value:231, start:-221,   end:-206,  },
+        {value:501, start:-202,   end:220,   },
+        {value:221, start:220,    end:420,   },
+        {value:121, start:420,    end:589,   },
+        {value:654, start:589,    end:960,   },
+        {value:432, start:960,    end:1279,  },
+        {value:321, start:1279,   end:1368,  },
+        {value:400, start:1368,   end:1644,  },
+        {value:300, start:1644,   end:1912,  },
+      ],
       div_size:{
         width: this.size[0] + 'px',
         height: this.size[1] + 'px'
@@ -66,8 +73,14 @@ export default {
     };
   },
   mounted() {
+    this.raw_data.forEach((item, index) =>{
+      item.status = this.Status[index]
+    });
+    // console.log(this.raw_data);
+
     this.initChart();
     this.bars_refresh();
+
     // this.text_show();
   },
   methods: {
@@ -100,6 +113,7 @@ export default {
 
       // 添加刻度尺
       this.svg.append("g")
+        .attr("id", "g-axis")
         .attr("transform", `translate(0, 60)`)
         .call(axis);
 
@@ -114,26 +128,16 @@ export default {
         .attr("x", (d)=>xScale(d))
         .attr("y", 80)
         .attr("width", 1)
-        .attr("height", 20);
+        .attr("height", 20)
+        .attr("fill", "#A7A7A7");
       
       //  添加朝代文字
-      this.svg.append("g")
-        .selectAll()
-        .data(this.period_span)
-        .join("text")
-        .attr("text-anchor", "middle")
-        .attr("x", (d)=>xScale((d.end + d.start) / 2))
-        .attr("y", 80 + 10)
-        .attr("dominant-baseline", "middle")  // 垂直居中
-        .text((d)=>d.name_en)
-        .attr("font-size", (d)=>{
-            if(d.end - d.start < 80)return "8px"
-            else return "12px"
-        })
+      this.draw_period_text();
     },
     bars_refresh(){
       d3.select("#g-bar").remove();
       d3.select("#g-text").remove();
+      d3.select("#g-axis").remove();
 
       const width = this.size[0] - 2 * this.padding;
       const height = this.size[1] - 2 * this.padding;
@@ -149,14 +153,14 @@ export default {
         .range([0, width]);
 
       var yScale = d3.scaleLinear()
-        .domain([0, d3.max(this.dataset, d=>d.value)])
+        .domain([0, d3.max(this.raw_data, d=>d.value)])
         .range([0, 60 - 12]);
 
       // 添加bar
       this.svg.append("g")
         .attr("id", "g-bar")
         .selectAll()
-        .data(this.dataset)
+        .data(this.raw_data)
         .join("rect")
         .attr("x", (d)=>xScale(d.start))
         .attr("y", (d)=>60-yScale(d.value))
@@ -175,15 +179,19 @@ export default {
           index.set(this, i);
         })
         .on("click", function(event, d){
-          console.log(that.dataset[index.get(this)].status);
-          that.dataset[index.get(this)].status = (d.status)?false:true
+          // console.log(that.raw_data[index.get(this)].status);
+          const newVal = cloneDeep(that.raw_data);
+          console.log("newVal");
+          console.log(newVal);
+          newVal[index.get(this)].status = (that.raw_data[index.get(this)].status)?false:true;
+          that.raw_data = newVal;
         });
       
       // 添加bar文字
       this.svg.append("g")
         .attr("id", "g-text")
         .selectAll()
-        .data(this.dataset)
+        .data(this.raw_data)
         .join("text")
         .attr("text-anchor", "middle")
         .attr("x", (d)=>xScale((d.end + d.start) / 2))
@@ -201,20 +209,64 @@ export default {
           .tickSizeOuter(0);
       // 添加刻度尺
       this.svg.append("g")
+        .attr("id", "g-axis")
         .attr("transform", `translate(0, 60)`)
         .call(axis);
       
       
     },
+    draw_period_text(){
+      //  添加朝代文字
+      d3.select("#period_text").remove();
+      const width = this.size[0] - 2 * this.padding;
+      var xScale = d3.scaleLinear()
+        .domain(this.total_span)
+        .range([0, width]);
+
+      this.svg.append("g")
+        .attr("id", "period_text")
+        .selectAll()
+        .data(this.period_span)
+        .join("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (d)=>xScale((d.end + d.start) / 2))
+        .attr("y", 80 + 10)
+        .attr("dominant-baseline", "middle")  // 垂直居中
+        .text((d)=>{
+          if(this.language=="English")return d.name_en;
+          else if(this.language=="Chinese")return d.name_cn;
+        })
+        .attr("font-size", (d)=>{
+            if(d.end - d.start < 80)return "8px"
+            else return "12px"
+        })
+    }
   },
   watch: {
-    dataset:{
+    raw_data:{
       handler(newVal, oldVal){
-        console.log("bars_refresh")
+        console.log(newVal);
+        console.log(oldVal);
+        console.log("raw_data-handler");
+        if(newVal===oldVal)return;
         this.bars_refresh();
+        this.$emit('update:data', newVal);
       },
       deep: true,
     },
+    Status:{
+      handler(newVal, oldVal){
+        console.log("Status-handler");
+        if(newVal===oldVal)return;
+        this.raw_data.forEach((item, index) =>{
+          item.status = newVal[index]
+        });
+      },
+      deep: true,
+    },
+    language(){
+      this.draw_period_text();
+    }
   }
 };
 </script>
@@ -231,7 +283,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgb(217, 208, 208);
+  /* background: rgb(217, 208, 208); */
 }
 
 </style>
