@@ -113,7 +113,7 @@
       </div>
       <div class="TimeBarChart">
         <TimeBarChart style="width: 100%;height: 100%;" :Status="history_items_status"
-           :size="timebarchartSize" :language="language" @update:data="history_items_status = $event"/><!-- @update:data="history_items_status = $event" -->
+           :size="timebarchartSize" :language="language" @update:data="update_status"/><!-- @update:data="history_items_status = $event" -->
       </div>
     </div>
 
@@ -159,6 +159,7 @@ import icon_close from '../assets/images/close.png'
 import axios from 'axios';
 import { GetLabelName_CN, GetCSVTitleName_CN } from '../common/labels_cn';
 import { GetLabelName_EN, GetCSVTitleName_EN } from '../common/labels_en';
+import { deepCompare } from '../common/common';
 
 export default {
   name: 'Main',
@@ -305,6 +306,10 @@ export default {
           this.label_name = GetLabelName_CN();
           this.csv_title_names = GetCSVTitleName_CN();
         }
+      },
+      update_status(newVal){
+        if(deepCompare(this.history_items_status, newVal))return;
+        this.history_items_status = newVal;
       }
     },
     watch: {

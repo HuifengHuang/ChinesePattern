@@ -1,11 +1,3 @@
-export function GetLabelName_EN(){
-    return {
-        SystemName: "SystemName"
-    }
-}
-
-export function GetLabelName_CN(){
-    return {
-        SystemName: "SystemName"
-    }
+export function deepCompare(valA, valB){
+    return JSON.stringify(valA) === JSON.stringify(valB)
 }

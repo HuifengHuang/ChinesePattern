@@ -10,14 +10,14 @@ import TimeBarChart from './components/TimeBarChart.vue';
 </script>
 
 <template>
-  <!-- <Main /> -->
+  <Main />
   <!-- <PieChart /> -->
   <!-- <WordCloud /> -->
   <!-- <MutipleSelector /> -->
   <!-- <RadialBarChart /> -->
   <!-- <Card /> -->
   <!-- <Details /> -->
-  <TimeBarChart />
+  <!-- <TimeBarChart /> -->
 </template>
 
 <style scoped>

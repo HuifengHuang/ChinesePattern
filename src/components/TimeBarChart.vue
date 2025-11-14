@@ -5,6 +5,7 @@
 <script>
 import * as d3 from 'd3';
 import cloneDeep from 'lodash/cloneDeep';
+import { deepCompare } from '../common/common';
 
 export default {
   name: 'TimeBarChart',
@@ -14,7 +15,7 @@ export default {
       default: "Chinese"
     },
     size: {
-      type: Number,
+      type: Array,
       default: [1800, 120]
     },
     Status: {
@@ -43,6 +44,7 @@ export default {
         {value:400, start:1368,   end:1644,  },
         {value:300, start:1644,   end:1912,  },
       ],
+      render_data:[],
       div_size:{
         width: this.size[0] + 'px',
         height: this.size[1] + 'px'
@@ -73,15 +75,15 @@ export default {
     };
   },
   mounted() {
-    this.raw_data.forEach((item, index) =>{
+    const cloner = cloneDeep(this.raw_data);
+    cloner.forEach((item, index) =>{
       item.status = this.Status[index]
     });
-    // console.log(this.raw_data);
+    this.render_data = cloner;
 
     this.initChart();
     this.bars_refresh();
 
-    // this.text_show();
   },
   methods: {
     initChart(){
@@ -109,15 +111,6 @@ export default {
           .tickValues(ticks)
           .tickFormat(d3.format(""))
           .tickSizeOuter(0);
-
-
-      // 添加刻度尺
-      this.svg.append("g")
-        .attr("id", "g-axis")
-        .attr("transform", `translate(0, 60)`)
-        .call(axis);
-
-      // console.log(this.span_bar);
 
       //  添加朝代分割线
       this.svg.append("g")
@@ -153,14 +146,14 @@ export default {
         .range([0, width]);
 
       var yScale = d3.scaleLinear()
-        .domain([0, d3.max(this.raw_data, d=>d.value)])
+        .domain([0, d3.max(this.render_data, d=>d.value)])
         .range([0, 60 - 12]);
 
       // 添加bar
       this.svg.append("g")
         .attr("id", "g-bar")
         .selectAll()
-        .data(this.raw_data)
+        .data(this.render_data)
         .join("rect")
         .attr("x", (d)=>xScale(d.start))
         .attr("y", (d)=>60-yScale(d.value))
@@ -179,19 +172,16 @@ export default {
           index.set(this, i);
         })
         .on("click", function(event, d){
-          // console.log(that.raw_data[index.get(this)].status);
-          const newVal = cloneDeep(that.raw_data);
-          console.log("newVal");
-          console.log(newVal);
-          newVal[index.get(this)].status = (that.raw_data[index.get(this)].status)?false:true;
-          that.raw_data = newVal;
+          const newVal = cloneDeep(that.render_data);
+          newVal[index.get(this)].status = (that.render_data[index.get(this)].status)?false:true;
+          that.render_data = newVal;
         });
       
       // 添加bar文字
       this.svg.append("g")
         .attr("id", "g-text")
         .selectAll()
-        .data(this.raw_data)
+        .data(this.render_data)
         .join("text")
         .attr("text-anchor", "middle")
         .attr("x", (d)=>xScale((d.end + d.start) / 2))
@@ -243,24 +233,22 @@ export default {
     }
   },
   watch: {
-    raw_data:{
+    render_data:{
       handler(newVal, oldVal){
-        console.log(newVal);
-        console.log(oldVal);
-        console.log("raw_data-handler");
-        if(newVal===oldVal)return;
+        console.log("render_data-handler");
+        if(deepCompare(newVal, oldVal))return;
         this.bars_refresh();
-        this.$emit('update:data', newVal);
+        this.$emit('update:data', newVal.map(item => item.status));
       },
       deep: true,
     },
     Status:{
       handler(newVal, oldVal){
-        console.log("Status-handler");
-        if(newVal===oldVal)return;
-        this.raw_data.forEach((item, index) =>{
+        const cloner = cloneDeep(this.raw_data);
+        cloner.forEach((item, index) =>{
           item.status = newVal[index]
         });
+        this.render_data = cloner;
       },
       deep: true,
     },
