@@ -31,7 +31,7 @@ export function GetLabelName_EN(){
         Stucture: "Stucture",
         Style: "Style",
         Morphology: "Morphology",
-        Quailty: "Quailty"
+        Quailty: "Quality"
     }
 }
 

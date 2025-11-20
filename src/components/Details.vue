@@ -21,7 +21,7 @@
             <span>{{ dataset[CSV_title_names.time_lv2] }}</span>
           </div>
         </div>
-        <div class="info">  <!-- Location  -->
+        <div class="info" style="height: fit-content;">  <!-- Location  -->
           <div class="name"><span>{{ label_name.Location }}</span></div>
           <div class="text">
             <span>{{ dataset[CSV_title_names.location] }}</span>
@@ -72,7 +72,7 @@
           <div class="name"><span>{{ label_name.Morphology }}</span></div>
           <div class="text"><span>{{ dataset[CSV_title_names.morphology] }}</span></div>
         </div>
-        <div class="info" style="border: none;"> <!-- Quailty  -->
+        <div class="info" style="border: none;"> <!-- Quality  -->
           <div class="name"><span>{{ label_name.Quailty }}</span></div>
           <div class="text"><span>{{ dataset[CSV_title_names.quality] }}</span></div>
         </div>
